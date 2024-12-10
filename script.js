@@ -6,7 +6,7 @@ let i = setInterval(() => {
 }, 700)
 
 //animation auto type
-var helloText = document.getElementById("hello-text")
+var helloText = document.getElementById("hello-text-WrittingText")
 var autoTypeHelloText = new AutoType({
         parent: helloText,
         writeSpeed: 200,
@@ -31,18 +31,35 @@ var autoTypeHelloText = new AutoType({
 
 //auto type write 
 var autoTypeImTom = new AutoType({
-    parent: document.getElementById("ImTom"),
+    parent: document.getElementById("ImTom-WrittingText"),
     writeSpeed: 150,
     opacityTransition: 0.2,
     className: ["rotHover", "rotEvent"]
-}).Write("I'm Tom,").Start()
+}).Write("{User : Tom}").Start()
+
 //auto type write 
 var autoTypewebDeveloper = new AutoType({
-    parent: document.getElementById("webDeveloper"),
+    parent: document.getElementById("web-WrittingText"),
+    writeSpeed: 200,
+    deleteSpeed: 200,
+    opacityTransition: 0.2,
+    loop: true,
+    className: ["rotHover", "rotEvent", "colorRed"]
+})
+.Write("web")
+.Sleep(5000)
+.Delete(100)
+.Write("C++")
+.Sleep(5000)
+.Delete(100)
+.Start()
+//espace insécable :   
+var autoTypewebDeveloper = new AutoType({
+    parent: document.getElementById("developer-WrittingText"),
     writeSpeed: 150,
     opacityTransition: 0.2,
     className: ["rotHover", "rotEvent", "colorRed"]
-}).Write("web developer").Start()
+}).Sleep(600).Write("developer").Start()
 
 //animation hover des lettres
 $(".rotHover").bind("webkitAnimationEnd mozAnimationEnd animationEnd", function() {
