@@ -1,0 +1,62 @@
+/*for first section */
+.cursorBlinker{
+    transition-duration: 0.2s;
+}
+
+.rotHover{
+    display: inline-block;
+}
+
+.Yrotation{
+    display: inline-block;
+    animation: Yrotation 1.5s linear;
+}
+@keyframes Yrotation {
+    0%{
+        transform: rotate3d(0, 1, 0, 0deg);
+    }
+    100%{
+        transform: rotate3d(0, 1, 0, 360deg);
+    }
+}
+.Xrotation{
+    display: inline-block;
+    animation: Xrotation 1.5s linear;
+}
+@keyframes Xrotation {
+    0%{
+        transform: rotate3d(1, 0, 0, 0deg);
+    }
+    100%{
+        transform: rotate3d(1, 0, 0, 360deg);
+    }
+}
+
+.Zrotation{
+    display: inline-block;
+    animation: Zrotation 2s ease-in-out;
+    transform-origin: 50.3% 57.3%;
+}
+@keyframes Zrotation {
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+
+.rotationAnimation{
+    display: inline-block;
+    animation: rotationAnimation 1s ease-in-out;
+}
+
+@keyframes rotationAnimation {
+    0%{
+        transform: rotate3d(0, 1, 0, 0deg);
+    }
+    100%{
+        transform: rotate3d(0, 1, 0, 360deg);
+    }
+}

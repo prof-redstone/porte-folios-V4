@@ -1,0 +1,542 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Helvetica, sans-serif;
+    background-color: #1d1d1d;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#main {
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+.sectionPage {
+    scroll-snap-align: start;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins";
+}
+
+button {
+    font-size: 100%;
+    font-family: inherit;
+    border: none;
+    padding: 0;
+    width: auto;
+    background: transparent;
+    outline: none;
+    line-height: normal;
+    -webkit-appearance: none;
+    outline: none;
+    user-select: none;
+}
+
+img {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+div {
+    box-sizing: border-box;
+}
+
+section {
+    height: 100vh;
+    padding: 0 0 0 0;
+    display: flex;
+
+}
+
+a:link,
+a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+/*menu contact premiere page*/
+#contact-menu {
+    background-color: #000;
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    width: auto;
+    border-bottom-left-radius: 10px;
+    display: flex;
+}
+
+#show-contact-menu {
+    display: none;
+    width: 0;
+    opacity: 0;
+    animation-duration: 0.3s;
+}
+
+.contact-link {
+    margin: 3px;
+}
+
+.grand-text {
+    font-size: 4.5em;
+}
+
+@media only screen and (max-width: 1000px) {
+    .grand-text {
+        font-size: 3em;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .grand-text {
+        font-size: 2em;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .grand-text {
+        font-size: 1.6em;
+    }
+}
+
+.grand-text-S2 {
+    font-size: 4em;
+}
+
+
+.BGsection2 {
+    background-color: #2aacb8;
+}
+
+#pageContainer {
+    display: flex;
+    flex-direction: row;
+    /*overflow-x: hidden;*/
+    transition: all 0.5s ease 0s;
+}
+
+.arrows {
+    position: absolute;
+
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: clamp(5px, 3vw, 40px);
+}
+
+
+.arrowImg {
+    width: clamp(60px, 10vw, 85px);
+    filter: grayscale(1) invert(0.8);
+    padding: 20px;
+    box-sizing: content-box;
+    border-width: 5px;
+    border-style: solid;
+    border-radius: 50%;
+    border-color: transparent;
+    transition-duration: 0.3s;
+}
+
+.arrowImg:hover {
+    border-color: rgb(0, 0, 0);
+    transform: scale(0.9);
+}
+
+
+.rainbowColor {
+    position: relative;
+}
+
+.rainbowColor:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-radius: 2px;
+    transition: all 0.1s ease-in-out;
+    background: rgb(89, 180, 53);
+    width: 100%;
+    height: 0px;
+}
+
+.rainbowColor:hover:before {
+    height: 5%;
+}
+
+@keyframes BackgroundMove {
+    0% {
+        background-position: 50% -50%
+    }
+
+    50% {
+        background-position: 50% 100%
+    }
+
+    100% {
+        background-position: 50% -50%
+    }
+}
+
+#moreHereText {
+    font-size: clamp(0.3em, 7vh, 1em);
+    text-align: center;
+    background-color: rgba(17, 17, 17, 0.76);
+    border-radius: 5px;
+    padding: 15px;
+}
+
+
+
+#linkContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    /*border: 2px solid white;*/
+    width: 80vw;
+    max-width: 1100px;
+    border-radius: 5px;
+    background-color: rgba(17, 17, 17, 0.76);
+    line-height: clamp(0.3em, 4vh, 4em);
+    gap: 10px;
+    padding: 5px;
+}
+
+.glitchEffect {
+    display: block;
+    position: relative;
+    text-decoration: none;
+    color: #dfdfdf;
+    width: max-content;
+    font-size: 0.5em;
+    height: 1em;
+}
+
+.divA {
+    width: 300px;
+}
+
+
+.glitchEffect:before {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: -2px;
+    border-radius: 2px;
+    transition: all 0.3s ease-in-out;
+    background: #c848cf;
+    width: 0%;
+    height: 3px;
+}
+
+.glitchEffect:hover:before {
+    width: calc(100% + 4px);
+}
+
+@media only screen and (max-width: 1000px) {
+    .grand-text-S2 {
+        font-size: 2.5em;
+    }
+
+    .glitchEffect {
+        font-size: clamp(0.1em, 10vw, 0.7em);
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .grand-text-S2 {
+        font-size: 1.5em;
+    }
+
+    .glitchEffect {
+        font-size: 6vw;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .grand-text-S2 {
+        font-size: 1.2em;
+    }
+
+    .glitchEffect {
+        font-size: 6vw;
+    }
+}
+
+
+#section3 {
+    background-color: #3e70bc;
+}
+
+.imgOnbg {
+    transform: translate(10px, -10px);
+    width: clamp(350px, 40vw, 800px);
+
+}
+
+#imgOnbg2 {
+    opacity: 0;
+    position: absolute;
+    z-index: 1;
+    animation: fade-in-out 10s infinite;
+}
+
+@keyframes fade-in-out {
+    0% {
+        opacity: 0;
+    }
+
+    48% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    98% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.imgArrow {
+    width: 8rem;
+    animation: giggle 1s infinite;
+}
+
+@keyframes giggle {
+    0% {
+        transform: rotate3d(0, 0, 1, 0deg);
+    }
+
+    50% {
+        transform: rotate3d(0, 0, 1, 5deg);
+    }
+
+    100% {
+        transform: rotate3d(0, 0, 1, 0deg);
+    }
+}
+
+#sec3container {
+    display: flex;
+    margin-top: 7vh;
+    width: 98%;
+    max-height: 600px;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    background-color: #3e70bc;
+}
+
+@media only screen and (max-width: 600px) {
+    #sec3container {
+        margin-top: 0vh;
+    }
+
+    p {
+        margin: 0px !important;
+    }
+}
+
+/*page 3 onbg (je crois que ça commence ici)*/
+#ClickherespanP3 {
+    position: relative;
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+#ClickherespanP3::before {
+    content: " ";
+    position: absolute;
+    left: 2%;
+    bottom: 0;
+    height: 2px;
+    width: 94%;
+    animation: rgb 4s infinite;
+}
+
+
+@keyframes rgb {
+    0% {
+        background-color: cyan;
+    }
+
+    16% {
+        background-color: blue;
+    }
+
+    33% {
+        background-color: magenta;
+    }
+
+    49% {
+        background-color: red;
+    }
+
+    66% {
+        background-color: yellow;
+    }
+
+    81% {
+        background-color: #0F0;
+    }
+
+    100% {
+        background-color: cyan;
+    }
+}
+
+
+/* section 4*/
+
+#section4 {
+    background-color: #0452DC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#section4 > div{
+    display: flex; 
+    width: 1200px; 
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.imgFractal {
+    width: 600px;
+    border-radius: 8px;
+}
+
+#titleS4 {
+    position: relative;
+    width: fit-content;
+}
+
+#titleS4:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-radius: 2px;
+    transition: all 0.1s ease-in-out;
+    background: rgb(15, 15, 10);
+    width: 100%;
+    height: 0px;
+}
+
+#titleS4:hover:before {
+    height: 5%;
+}
+
+@media only screen and (max-width: 1220px) {
+    .imgFractal {
+        width: 500px;
+    }
+    #section4 > div{
+        width: 1000px;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    #section4 > div{
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .imgFractal {
+        width: 350px;
+    }
+    #section4  p{
+        font-size: 1.0rem !important;
+        max-width: 320px !important;
+    }
+    #section4  h1{
+        font-size: 2.0rem !important;
+    }
+}
+
+.giggleLR{
+    animation: GiggleLR infinite 2s;
+}
+
+@keyframes GiggleLR{
+    0% {
+        transform: translate(0px);
+    }
+    50% {
+        transform: translate(7px);
+    }
+    0% {
+        transform: translate(0px);
+    }
+}
+
+/*pour le fondus enchainé entre les photos*/
+.imgTopTransition {
+    opacity: 0;
+    position: absolute;
+    animation-fill-mode: forwards !important;
+}
+
+.imgOpacityIn {
+    animation: fadeinFractal 0.5s linear;
+}
+
+@keyframes fadeinFractal {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.imgOpacityOut {
+    animation: fadeoutFractal 0.5s linear;
+}
+
+@keyframes fadeoutFractal {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.GithubBTN {
+    background-color: #1d1d1d;
+    color: white;
+    border-radius: 5px;
+}
+.GithubBTN:hover{
+    color: #1d1d1d;
+    background-color: white;
+    transition: 0.5s;
+}
