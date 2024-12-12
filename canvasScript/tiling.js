@@ -7,7 +7,7 @@ function Tiling() {
     let lastCase = [0, 0] // postition de la souris 
     let PI = Math.PI;
     let time = 0;
-    let speed = 0.5;
+    let speed = 0.4;
 
 
     this.setup = function() { //fonction de setup executer 1 fois 
@@ -16,7 +16,7 @@ function Tiling() {
         ctx.canvas.width = window.innerWidth;
         ctx.canvas.height = window.innerHeight;
         ctx.fillStyle = "rgb(21, 28, 36)";
-        ctx.strokeStyle = "#897E5870";
+        ctx.strokeStyle = "#2F6DA140";
 
         for (let i = 0; i < window.innerWidth / taille; i++) {
             tableau[i] = []

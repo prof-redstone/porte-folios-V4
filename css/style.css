@@ -2,10 +2,14 @@
     background-color: #ebf0f5;
     fill: #ebf0f5;
 }
+.color1-text{
+    color: #ebf0f5;
+}
 
 .color2{
-    background-color: #0a84ff;
-    fill: #0a84ff;
+    background-color: #06509B;
+    fill: #06509B;
+    color: #06509B;
 }
 
 body {

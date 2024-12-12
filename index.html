@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/text-anim.css">
+    <link rel="stylesheet" href="css/section3.css">
     <link rel="icon" href="img/ico.png" id="light-scheme-icon">
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,500;0,600;0,700;1,800&display=swap"
@@ -60,25 +61,20 @@
             </div>
             <div>
                 <div style="width: 80%; margin: 0 auto; text-align: center; padding-bottom: 20px;">
-                    <h3 id="WhoAmITitle" style="margin-bottom: 20px; font-size: 4em;">Who am I ?</h3>
+                    <h3 id="WhoAmITitle" style="margin-bottom: 40px; font-size: 4em;">Who am I ?</h3>
                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-top: 30px;" >
                         <p style="width: 70%; font-size: 1.3em;line-height: 1.6;text-align: left;">
                             I'm Tom Demagny, a 20-year-old student in my third year at Polytech Clermont, studying
-                            Mathematical Engineering and Data Science (IMDS). I'm passionate about programming, with
-                            strong
-                            skills in JavaScript, C++, OpenGL, and machine learning. My personal projects range from
-                            fractal
-                            simulations to building 3D physics and rendering engines, and experimenting with machine learning
-                            algorithms.
-
-                            I also made YouTube video where I walk through the creation of my personal assistant,
-                            which
-                            was a great way to share my work and improve my skills in web development and programming.
-
+                            Mathematical Engineering and Data Science (IMDS). I'm passionate about programming, 
+                            with strong skills in JavaScript, C++, OpenGL, and machine learning. 
+                            My personal projects range from fractal simulations to building 3D physics and rendering engines, 
+                            and experimenting with machine learning algorithms.
+                            I also made YouTube video where I walk through the creation of GLaDOS my personal assistant,
+                            which was a great way to share my work and improve my skills in AI development and programming.
                             I'm looking to work in AI and emerging technologies, diving into new applications and
                             contributing to innovative projects.
                         </p>
-                        <img src="img/minecraft-redstone.png" alt="personal picture" style="max-width: 40%; height: auto;">
+                        <img class="rotHover" src="img/me.jpg" alt="personal picture" style="max-width: 30%; height: auto; filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.3)); border-radius: 50%;">
                     </div>
                 </div>
             </div>
@@ -97,41 +93,16 @@
                     </div>
                 </div>
             </div>
-            <div style="height: 100%; flex-direction: column; justify-content: space-evenly;">
-                <div>
-                    <svg class="svg-curve" viewBox="0 0 1440 40" xmlns="http://www.w3.org/2000/svg" style="display: block; ">
-                        <path class="color1" d="m1 0s305 35 789 37c486-10 633-29 798-37v0h-1589z">
-                        </path>
-                    </svg>
-                </div>
-                <div style="scroll-snap-align: start;">
-                    <div style="display: flex; align-items: center;">
-                        <div style="max-width: 550px; padding: 20px 0px 20px 20px; max-height: 300px;">
-                            <a href="http://onbg.herokuapp.com" target="blank" style="text-decoration: none;">
-                                <h1 id="BoardGameOnlineTitle"
-                                    style="font-size: 3.2rem; font-weight: 800; line-height: 1.15; color:#fff8e8;">Board
-                                    game online</h1>
-                            </a>
-                            <p style="color: #FFF; font-size: 1.4rem; line-height: 1.4; margin-top: 20px;">My <span
-                                    style="color: #74e3ed;">online</span> web hub game powered by <span
-                                    style="color: #79f970;">NodeJS</span> to play <span
-                                    style="color: #fcb0ae;">multiplayer</span> game with your friends at the same time
-                                anywhere, with a large amount of game like connect4 and tic-tac-toe. <span>
-                            </p>
-                        </div>
-
-
-                    </div>
-
-                </div>
-                <div
-                    style="padding: 10px; max-height: 800px; display: flex; justify-content: center; margin-top: 20px;">
-                    <div
-                        style="background-color: rgb(0,0,0, 35%); border-radius: 8px; position: relative; width: clamp(350px,40vw,800px);">
-                        <img src="img/onbg-morpion.png" alt="image morpion de onbg" class="imgOnbg" id="imgOnbg2">
-                        <img src="img/onbg-morpion.png" alt="image morpion de onbg" class="imgOnbg" id="imgOnbg2">
-                        <img src="img/onbg-morpion.png" alt="image morpion de onbg" class="imgOnbg" id="imgOnbg2">
-                    </div>
+            <div>
+                <svg class="svg-curve" viewBox="0 0 1440 40" xmlns="http://www.w3.org/2000/svg" style="display: block; ">
+                    <path class="color1" d="m1 0s305 35 789 37c486-10 633-29 798-37v0h-1589z">
+                    </path>
+                </svg>
+            </div>
+            <div style="height: 100%; flex-direction: column; justify-content: space-evenly;  text-align: center;">
+                <h3 class="color1-text" id="SomeofmyProjectsTitle" style="margin-bottom: 40px; font-size: 4em; margin-top: 100px;">Some of my projects</h3>
+                <div id="project-cards-container">
+                    
                 </div>
             </div>
         </section>
@@ -144,6 +115,7 @@
 <script src="canvasScript/neuronWeb.js"></script>
 <!--script src="canvasScript/grassSimulation.js"></script!-->
 <script src="canvasScript/tiling.js"></script>
+<script src="cards.js"></script>
 <script src="section1.js"></script>
 <script src="section2.js"></script>
 <script src="section3.js"></script>
