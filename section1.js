@@ -35,7 +35,7 @@ var autoTypeImTom = new AutoType({
     writeSpeed: 150,
     opacityTransition: 0.2,
     className: ["rotHover", "rotEvent"]
-}).Write("{User : Tom}").Start()
+}).Write("{ User : Tom }").Start()
 
 //auto type write 
 var autoTypewebDeveloper = new AutoType({

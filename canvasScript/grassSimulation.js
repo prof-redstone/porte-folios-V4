@@ -182,7 +182,7 @@ function grassSimulation() {
 
             for (let i = 0; i < brand.length; i++) {
                 if ((this.x <= brand[i].x + 100 && brand[i].x - 100 <= this.x)) {
-                    brand[i].wind = brand[i].windRecistance * this.speed/15
+                    brand[i].wind = 0.3*brand[i].windRecistance * this.speed/15
                 }
             }
         }
@@ -268,7 +268,7 @@ function grassSimulation() {
 }
 
 let grassSimulationCanvas = new grassSimulation()
-
+grassSimulationCanvas.StartGrassSimulation()
 window.addEventListener("resize", () => {
     grassSimulationCanvas.setup()
 });

@@ -9,7 +9,19 @@
 .color2{
     background-color: #06509B;
     fill: #06509B;
+}
+
+.color2-text{
     color: #06509B;
+}
+
+.color3{
+    background-color: #0f96da;
+    fill: #0f96da;
+}
+
+.color3-text{
+    color: #0f96da;
 }
 
 body {
@@ -22,7 +34,7 @@ body {
 }
 
 #main {
-    scroll-snap-type: y proximity;
+    /*scroll-snap-type: y proximity;*/
     overflow-y: scroll;
     height: 100vh;
     overflow-x: hidden;
@@ -65,4 +77,28 @@ span {
 
 .grand-text {
     font-size: 4.5em;
+}
+
+.underline-blue {
+    display: inline-block;
+    position: relative;
+}
+
+.underline-blue::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    border-radius: 5px;
+    bottom: 0;
+    left: 0;
+    background-color: #0f96da;
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+
+.underline-blue:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
 }
