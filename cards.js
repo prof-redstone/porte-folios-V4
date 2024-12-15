@@ -1,11 +1,12 @@
+
 var cardsCollection = [{
     title: "Julia set",
     description: "programme permettant de visualiser des fractals de Julia et bien plus",
-    langage: ["c++"],
+    langage: ["C++", "SFML"],
     image: "img/fractalGenerator/0.png",
     code: "https://github.com/prof-redstone/fractals-generator",
     run: "ext/AngleFlower/index.html",
-    action: "https://github.com/prof-redstone/fractals-generator"
+    action: "https://github.com/prof-redstone/fractals-generator",
   },
   {
     title: "Project GLaDOS",
@@ -19,7 +20,7 @@ var cardsCollection = [{
 ];
 
 var imagesCards1 = [{
-    source: "img/test/1.png",
+    source: "img/me.jpg",
     action: "oui"
   },
   {

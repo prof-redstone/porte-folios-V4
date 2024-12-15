@@ -5,7 +5,7 @@ var SomeofmyProjectsTitle = new AutoType({
     writeSpeed: 100,
     deleteSpeed: 200,
     opacityTransition: 0.2,
-    className: ["rotHover", "rotEvent"]
+    className: ["rotHover"]
 })
 .Write("Some of my projects")
 .Start()
@@ -82,6 +82,15 @@ function generateCards() {
         description.textContent = project.description;
         description.classList.add("description-card");
         text.appendChild(description);
+
+        const langages = document.createElement('div');
+        langages.classList.add("langages-card")
+        project.langage.forEach(l => {
+            const langage = document.createElement('p');
+            langage.textContent = l
+            langages.appendChild(langage);
+        })
+        text.appendChild(langages);
 
         
         const boutons = document.createElement('div');

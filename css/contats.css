@@ -10,6 +10,9 @@
     align-items: center;
     margin: 10px;
     overflow-x: hidden;
+    display: flex; 
+    justify-content: flex-start;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     
 }
 
@@ -18,7 +21,7 @@
     margin: 20px;
 }
 
-#BGmail{
+#BGmail, #BGlinkedin, #BGgit{
     width: 90px;
     height: 90px;
     transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -26,5 +29,15 @@
 
 #BGmail:hover{
     width: 325px;
+    height: 90px;
+}
+
+#BGgit:hover{
+    width: 220px;
+    height: 90px;
+}
+
+#BGlinkedin:hover{
+    width: 250px;
     height: 90px;
 }

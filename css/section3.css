@@ -87,3 +87,13 @@ a {
     color: inherit; 
     text-decoration: none; 
 }
+
+.langages-card{
+    display: flex;
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+.langages-card > p{
+    margin-right: 10px;
+    margin-left: 10px;
+}

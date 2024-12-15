@@ -5,7 +5,7 @@ var Howtocontactme = new AutoType({
     writeSpeed: 100,
     deleteSpeed: 200,
     opacityTransition: 0.2,
-    className: ["rotHover", "rotEvent"]
+    className: ["rotHover"]
 })
 .Write("How to contact me ?")
 .Start()

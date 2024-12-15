@@ -1,0 +1,54 @@
+.skillsButon {
+    width: 250px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    border-radius: 10px;
+    z-index: 10;
+    transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.btnCategorySelect {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+    background-color: #ffffff;
+}
+
+
+.skillsGrid {
+    display: grid;
+}
+
+.imgSkill {
+    width: 75px;
+    margin-bottom: 20px;
+}
+
+.skillsGrid {
+    position: absolute;
+    display: grid;
+    width: inherit;
+    grid-template-columns: repeat(auto-fill, 100px);
+    justify-content: space-between;
+    flex-wrap: wrap;
+    grid-gap: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.skillsGridShow {
+    opacity: 1;
+    z-index: 5;
+    transform: translateY(0);
+}
+
+.skillElement {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    user-select: none;
+}

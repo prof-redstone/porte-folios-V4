@@ -4,7 +4,7 @@ var autoTypeHelloText = new AutoType({
     writeSpeed: 100,
     deleteSpeed: 200,
     opacityTransition: 0.2,
-    className: ["rotHover", "rotEvent"]
+    className: ["rotHover"]
 })
 .Write("Other projects")
 .Start()
@@ -13,7 +13,7 @@ function carrousel(id, list, toRight){
     this.array = []
     this.timeCarrousel = 0;
     this.imgesSizeCarrousel = 200;
-    this.imageMargeCarrousel = 10;
+    this.imageMargeCarrousel = 20;
     this.nombreImageCarrousel = 0;
     this.speedCarrousel = toRight ? this.imgesSizeCarrousel + this.imageMargeCarrousel : -this.imgesSizeCarrousel - this.imageMargeCarrousel;
     this.slideImagesInterval;
@@ -31,14 +31,21 @@ function carrousel(id, list, toRight){
             let a = document.createElement('a');
             a.href = project.action;
             a.target = '_blank';
+            let holdImg = document.createElement('div');
+            holdImg.style.width = `${this.imgesSizeCarrousel}px`
+            holdImg.style.height = `${this.imgesSizeCarrousel}px`
             let img = document.createElement('img');
             img.src = project.source;
-            img.classList.add("image-carrousel")
+            img.style.width = `${this.imgesSizeCarrousel}px`
+            img.style.height = `${this.imgesSizeCarrousel}px`
+            holdImg.classList.add("holdImg-carrousel")
+            img.classList.add("img-carrousel")
             container.appendChild(a);
-            a.appendChild(img);
+            a.appendChild(holdImg);
+            holdImg.appendChild(img);
             let margeLeft = counter * (this.imageMargeCarrousel + this.imgesSizeCarrousel)
-            img.style.marginLeft = `${margeLeft}px`
-            this.array.push([img, counter]);
+            holdImg.style.marginLeft = `${margeLeft}px`
+            this.array.push([holdImg, counter]);
             counter++;
         })
         this.nombreImageCarrousel = counter;
