@@ -31,26 +31,44 @@ function generateCards() {
         }
 
 
-        if (project.image) {
-            let img = document.createElement('img');
-            img.src = project.image;
-            img.alt = project.title;
-            img.classList.add("media-card")
-            media.appendChild(img);
-        } else if (project.video) {
+        if (project.video) {
+            let videoContainer = document.createElement('div');
+            videoContainer.style.position = 'relative';
+            videoContainer.style.width = '100%';
+            videoContainer.style.height = '100%';
+        
             let video = document.createElement('video');
             video.loop = true;
             video.muted = true; 
             video.autoplay = true;
             video.preload = "metadata";
             video.classList.add("media-card");
-            
+            video.style.position = 'absolute';
+        
             const source = document.createElement('source');
             source.src = project.video;
             source.type = "video/mp4";
             video.appendChild(source);
-
-            media.appendChild(video);
+        
+            let fallbackImage = document.createElement('img');
+            fallbackImage.src = project.image;
+            fallbackImage.alt = project.title;
+            fallbackImage.classList.add("media-card");
+            
+            video.addEventListener('loadeddata', () => {
+                console.log('Video loaded successfully');
+                video.style.position = "relative"
+                fallbackImage.style.display = 'none'; 
+            });
+        
+            video.addEventListener('error', () => {
+                console.error('Video failed to load');
+                video.style.display = 'none'; 
+            });
+        
+            videoContainer.appendChild(fallbackImage);
+            videoContainer.appendChild(video);
+            media.appendChild(videoContainer);
         }
 
         if (evenNumber % 2 == 1) {//pourchanger l'ordre

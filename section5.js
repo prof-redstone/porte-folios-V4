@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function btnSkillsClick(){
-    console.log(categorySelecte)
     for (let i = 0; i < 7; i++) {
         btnCategoryArray[i].classList.remove('btnCategorySelect');
         categoryArray[i].classList.remove('skillsGridShow');
