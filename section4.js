@@ -19,9 +19,9 @@ function carrousel(id, list, toRight){
     this.slideImagesInterval;
     this.id = id;
     this.list = list;
-    this.time2translate = 2000;
+    this.time2translate = 4000;
     this.transitionValue = ["all "+this.time2translate/1000+"s linear","all "+this.time2translate/1000+"s cubic-bezier(0.25, 0.1, 0.25, 1)"];
-    this.mode = 1 //l linear, b bezier
+    this.mode = 0 //l linear, b bezier
 
 
     this.generate = function(){
@@ -98,5 +98,7 @@ function carrousel(id, list, toRight){
 
 var carrousel1 = new carrousel('carrouselImages1',imagesCards1, true);
 var carrousel2 = new carrousel('carrouselImages2', imagesCards2, false);
+var carrousel3 = new carrousel('carrouselImages3', imagesCards3, true);
 setTimeout(function() {carrousel1.generate()}, 0);
-setTimeout(function() {carrousel2.generate()}, 500);
+setTimeout(function() {carrousel3.generate()}, 0);   
+setTimeout(function() {carrousel2.generate()}, 0);

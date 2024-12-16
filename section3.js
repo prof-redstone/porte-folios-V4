@@ -7,7 +7,7 @@ var SomeofmyProjectsTitle = new AutoType({
     opacityTransition: 0.2,
     className: ["rotHover"]
 })
-.Write("Some of my projects")
+.Write("Some of my best projects")
 .Start()
 
 function generateCards() {

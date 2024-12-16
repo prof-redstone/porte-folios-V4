@@ -38,7 +38,6 @@ function setup() {
     loop();
     loop();
     loop();
-    loop();
     draw();
 
 }

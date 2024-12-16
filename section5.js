@@ -10,7 +10,7 @@ var MySkills = new AutoType({
 .Write("My skills")
 .Start()
 
-let categorySelecte = 1;
+let categorySelecte = 0;
 let btnCategoryArray = []
 let categoryArray = []
 
