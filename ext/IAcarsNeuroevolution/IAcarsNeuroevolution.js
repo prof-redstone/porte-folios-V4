@@ -1,3 +1,5 @@
+info();
+console.log("input info() for further information");
 var canvas;
 var ctx;
 var H;
@@ -13,13 +15,11 @@ var roadPoint = [];
 var spawnPoint = [0, 0];
 var finishPoint = [0, 0];
 
-var nbcars = 20;
+var nbcars = 100;
 var carscollec = [];
-//for debugging
-/*var cars = new car();
-cars.init()*/
 
-var timeGeneration = 300;
+var maxTimeGeneration = 600;
+var thisGenerationTime = 0;
 
 function setup() {
     var canvas = document.getElementById("IAcarsNeuroevolution");
@@ -38,7 +38,7 @@ function setup() {
 
     SetupNeuroevolutionNetwork({
         nbEntity: nbcars,
-        pattern: [5, 4, 4, 2]
+        pattern: [5, 5, 5, 3]
     })
     setInterval(loop, 30);
 }
@@ -80,17 +80,13 @@ function loop() {
             carscollec[i].render();
         }
 
-        /*cars.render();
-        cars.update();
-        cars.collision();
-        cars.sensorsUpdate();*/
-
 
         time++
-        if (time % timeGeneration == 0) {
-
+        thisGenerationTime++
+        if (thisGenerationTime >= maxTimeGeneration) {//to make the new generation
+            thisGenerationTime = 0;
             //newGeneration();
-            let scoreByIndex = []
+            var scoreByIndex = []
             for (let i = 0; i < carscollec.length; i++) {
                 scoreByIndex.push([carscollec[i].getScore(), carscollec[i].geneIndex]);
             }
@@ -232,8 +228,15 @@ function car() {
         //console.log(this.sensors[2])
         let output = networkProcesse(input, this.geneIndex);
 
-        this.turn = output[0][0];
-        this.move = output[1][0];
+        this.move = output[0][0];
+
+        this.turn = 0;
+        if (output[1][0] > 0.5) {
+            this.turn += 1
+        }
+        if (output[2][0] > 0.5) {
+            this.turn += -1
+        }
     }
 
     this.getScore = function() {
@@ -298,13 +301,18 @@ document.addEventListener('keydown', function(event) {
         } else if (event.keyCode == 70) { //f for finish point
             finishPoint = [mousePos[0], mousePos[1]];
         } else if (event.keyCode == 32) { //space to start
+            time = 0;
             startSimulation();
+        } else if (event.keyCode == 8) { //backspace to reset road
+            roadPoint = [];
         }
     } else if (mode == 'training') {
-        if (event.keyCode == 37) { //left for debug
-            cars.turn = -1
-        } else if (event.keyCode == 39) { //right for debug
-            cars.turn = 1
+        if (event.keyCode == 37) { //left to decrease thisTimeGeneration 
+            maxTimeGeneration -= 100;
+            console.log("MaxTimeGeneration : ", maxTimeGeneration);
+        } else if (event.keyCode == 39) { //right to increase thisTimeGeneration 
+            maxTimeGeneration += 100;
+            console.log("MaxTimeGeneration : ", maxTimeGeneration);
         } else if (event.keyCode == 32) { //space to start
             mode = "road";
         }
@@ -313,15 +321,7 @@ document.addEventListener('keydown', function(event) {
 
 document.addEventListener('keyup', function(event) {
     if (mode == 'training') {
-        if (event.keyCode == 37) { //left for debug
-            if (cars.turn == -1) {
-                cars.turn = 0
-            }
-        } else if (event.keyCode == 39) { //right for debug
-            if (cars.turn == 1) {
-                cars.turn = 0
-            }
-        }
+        
     }
 });
 
@@ -345,7 +345,11 @@ function getRndColor() {
 }
 
 
-
+function info(){
+    console.log("Press right-click to place wall, 's' to place spawn point, 'f' for the end of track, then presse 'space' to start simulation.")
+    console.log("Make sure to close path of wall to prevent car exhaust");
+    console.log("During the car training, press left-arrow to decrease the time for each generation, and right-arrow to increase it.")
+}
 
 
 setup()

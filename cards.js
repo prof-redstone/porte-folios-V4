@@ -1,22 +1,46 @@
 
-var cardsCollection = [{
-    title: "Julia set",
-    description: "programme permettant de visualiser des fractals de Julia et bien plus",
-    langage: ["C++", "SFML"],
-    image: "img/fractalGenerator/0.png",
-    code: "https://github.com/prof-redstone/fractals-generator",
-    run: "ext/AngleFlower/index.html",
-    action: "https://github.com/prof-redstone/fractals-generator",
-  },
+var cardsCollection = [
   {
-    title: "Project GLaDOS",
-    description: "Vidéo résumant le processuce de création de GLaDOS mon nouvel assistant connecté tiré du jeu Portal, de la modelisation de son corps, l'impression 3D, la creation de l'IA interne, de sa capacité à parler avec sa vrai voix etc..",
-    langage: ["NodeJS", "JS", "HTML", "CSS"],
-    video: "img/AudioGenCMD.mov",
+    title: "GLaDOS Project",
+    description: "Video summarizing the creation process of GLaDOS, my new connected home assistant inspired by the game Portal, from modeling its head, 3D printing, developing the internal AI, enabling it to speak with its authentic voice, and more.",
+    langage: ["C", "python", "3D modeling", "3D printing", "AI"],
+    video: "img/videoProject/PresGaldos.mp4",
     run: "https://www.youtube.com/watch?v=4LW9Yb6zW9s",
     action: "https://www.youtube.com/watch?v=4LW9Yb6zW9s",
     code: "https://github.com/prof-redstone/GLaDOS-PC-arduino"
-  }
+  },
+  {
+    title: "Fractals generator",
+    description: "A program for visualizing and navigating Mandelbrot fractals, the Julia set, and the Burning Ship. The program is written in C++ using SFML, with customizable colors and rendering parameters.",
+    langage: ["C++", "SFML"],
+    video: "img/videoProject/PresFractalC++.mp4",
+    code: "https://github.com/prof-redstone/fractals-generator",
+    action: "https://github.com/prof-redstone/fractals-generator",
+  },
+  {
+    title: "3D Fractals Raymarching",
+    description: "A GLSL shader that enables immersion into the world of 3D folding space fractals using \"ray marching\". It generates intricate and dynamic fractal patterns by combining space-folding transformations, iterative scaling, and advanced lighting techniques.",
+    langage: ["GLSL", "JS"],
+    video: "img/videoProject/RayMarching.mp4",
+    code: "https://github.com/prof-redstone/fractals-generator",
+    action: "https://github.com/prof-redstone/fractals-generator",
+  },
+  {
+    title: "Sandbox simulation",
+    description: "A program for visualizing and navigating Mandelbrot fractals, the Julia set, and the Burning Ship. The program is written in C++ using SFML, with customizable colors and rendering parameters.",
+    langage: ["C++", "SFML"],
+    video: "img/videoProject/Sandbox.mp4",
+    code: "https://github.com/prof-redstone/fractals-generator",
+    action: "https://github.com/prof-redstone/fractals-generator",
+  },
+  {
+    title: "Sandbox simulation",
+    description: "A program for visualizing and navigating Mandelbrot fractals, the Julia set, and the Burning Ship. The program is written in C++ using SFML, with customizable colors and rendering parameters.",
+    langage: ["C++", "SFML"],
+    video: "img/videoProject/BiardGame.mp4",
+    code: "https://github.com/prof-redstone/fractals-generator",
+    action: "https://github.com/prof-redstone/fractals-generator",
+  },
 ];
 
 var imagesCards1 = [{
