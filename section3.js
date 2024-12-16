@@ -41,7 +41,7 @@ function generateCards() {
             video.loop = true;
             video.muted = true; 
             video.autoplay = true;
-            video.preload = "metadata";
+            video.preload = "auto";
             video.classList.add("media-card");
             video.style.position = 'absolute';
         
@@ -54,7 +54,7 @@ function generateCards() {
             fallbackImage.src = project.image;
             fallbackImage.alt = project.title;
             fallbackImage.classList.add("media-card");
-            
+
             video.addEventListener('loadeddata', () => {
                 console.log('Video loaded successfully');
                 video.style.position = "relative"
