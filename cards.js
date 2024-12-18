@@ -8,7 +8,8 @@ var cardsCollection = [
     image: "img/imageProject/PresGlados.jpg",
     run: "https://www.youtube.com/watch?v=4LW9Yb6zW9s",
     action: "https://www.youtube.com/watch?v=4LW9Yb6zW9s",
-    code: "https://github.com/prof-redstone/GLaDOS-PC-arduino"
+    code: "https://github.com/prof-redstone/GLaDOS-PC-arduino",
+    anne: "2024"
   },
   {
     title: "3D Fractals Raymarching",
@@ -19,6 +20,7 @@ var cardsCollection = [
     code: "https://github.com/prof-redstone/porte-folios-V4/tree/master/p5js/FractalRaymarching",
     action: "p5js/FractalRaymarching/index.html",
     run: "p5js/FractalRaymarching/index.html",
+    anne: "2023"
   },
   {
     title: "Fractals generator",
@@ -28,6 +30,7 @@ var cardsCollection = [
     image: "img/imageProject/PresFractalC++.jpg",
     code: "https://github.com/prof-redstone/fractals-generator",
     action: "https://github.com/prof-redstone/fractals-generator",
+    anne: "2021"
   },
   {
     title: "Sandbox simulation",
@@ -37,6 +40,7 @@ var cardsCollection = [
     image: "img/imageProject/Sandbox.jpg",
     code: "https://github.com/prof-redstone/sandbox",
     action: "https://github.com/prof-redstone/sandbox",
+    anne: "2022"
   },
   {
     title: "Board game online",
@@ -46,6 +50,7 @@ var cardsCollection = [
     image: "img/imageProject/BoardGame.jpg",
     code: "https://github.com/prof-redstone/online-game-board",
     action: "https://github.com/prof-redstone/online-game-board",
+    anne: "2020",
   },
   {
     title: "TIPE",
@@ -55,6 +60,7 @@ var cardsCollection = [
     image: "img/imageProject/Tipe.jpg",
     code: "https://github.com/prof-redstone/TIPE",
     action: "https://github.com/prof-redstone/TIPE",
+    anne: "2024",
   },
 ];
 

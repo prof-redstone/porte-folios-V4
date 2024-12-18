@@ -44,6 +44,7 @@ function generateCards() {
             video.preload = "auto";
             video.classList.add("media-card");
             video.style.position = 'absolute';
+            video.style.opacity = "0";
         
             const source = document.createElement('source');
             source.src = project.video;
@@ -55,10 +56,11 @@ function generateCards() {
             fallbackImage.alt = project.title;
             fallbackImage.classList.add("media-card");
 
-            video.addEventListener('loadeddata', () => {
+            video.addEventListener('canplaythrough', () => {
                 console.log('Video loaded successfully');
                 video.style.position = "relative"
                 fallbackImage.style.display = 'none'; 
+                video.style.opacity = "1";
             });
         
             video.addEventListener('error', () => {
@@ -132,7 +134,24 @@ function generateCards() {
 
             boutons.appendChild(button);
         }    
-        text.appendChild(boutons)
+
+        const date = document.createElement('p');
+        date.style.marginRight = "10px"
+        date.style.marginLeft = "10px"
+        date.classList.add("date-card")
+        date.textContent = project.anne;
+
+        const divBTNEtDate = document.createElement('div');
+        divBTNEtDate.style.display = "flex"
+        divBTNEtDate.style.alignItems = "center"
+        divBTNEtDate.style.marginTop = "15px"
+        divBTNEtDate.style.justifyContent = "space-between"
+        divBTNEtDate.style.width = "100%"
+        divBTNEtDate.appendChild(boutons);
+        divBTNEtDate.appendChild(date);
+
+
+        text.appendChild(divBTNEtDate)
         evenNumber++;
         container.appendChild(card);
     });
