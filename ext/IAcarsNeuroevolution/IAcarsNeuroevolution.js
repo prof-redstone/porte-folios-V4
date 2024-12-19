@@ -38,22 +38,34 @@ function setup() {
 
     SetupNeuroevolutionNetwork({
         nbEntity: nbcars,
-        pattern: [5, 5, 5, 3]
+        pattern: [5, 5, 5, 4]
     })
+
+    roadPoint = [[103, 142],[93, 281],[313, 304],[645, 267],[924, 300],[1068, 333],[1149, 464],[1060, 558],[1001, 654],[1130, 678],[1366, 658],[1377, 274],[1381, 93],[921, 106],[562, 72],[245, 90],[105, 146],[98, 146]]
+    spawnPoint = [189, 208]
+    finishPoint = [1092, 621]
+    startSimulation()
     setInterval(loop, 30);
+
+
 }
 
 
 function loop() {
-    ctx.clearRect(0, 0, W, H)
+    ctx.fillStyle = "#EEE"
+    ctx.fillRect(0, 0, W, H)
 
+    ctx.strokeStyle = "rgba(0,0,255,1)"
     //draw road
+    ctx.lineWidth = 8
+    ctx.lineCap = "round";
     for (let i = 0; i < roadPoint.length - 1; i++) {
         ctx.beginPath();
         ctx.moveTo(roadPoint[i][0], roadPoint[i][1]);
         ctx.lineTo(roadPoint[i + 1][0], roadPoint[i + 1][1]);
         ctx.stroke();
     }
+    ctx.lineWidth = 3
 
     //draw spawn and finish point
     ctx.beginPath();
@@ -66,6 +78,8 @@ function loop() {
     ctx.fillStyle = "#0F0";
     ctx.fill();
 
+    
+    ctx.strokeStyle = "rgba(0,0,0,0.2)"
 
     //phase principale
     if (mode == "training") {
@@ -119,9 +133,8 @@ function car() {
     this.timeAlive;
     this.color;
     this.maxLenghtSensor;
-
-    //const
     this.speed;
+    this.maxSpeed = 5;
     this.speedRot;
     this.sensorsAngle = []; //angle btw sensors and orientation, + indicate nb of sensor
     
@@ -195,22 +208,38 @@ function car() {
 
     this.render = function() {
         //ball
+        const size = 20; // Taille du triangle
         ctx.fillStyle = this.color;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, 10, 0, 6);
+        // Calculer les trois sommets du triangle
+        const x1 = this.x + size * Math.cos(this.angle); // Pointe avant
+        const y1 = this.y + size * Math.sin(this.angle);
+        const x2 = this.x + size * 0.5 * Math.cos(this.angle + Math.PI * 2 / 3); // Coin gauche
+        const y2 = this.y + size * 0.5 * Math.sin(this.angle + Math.PI * 2 / 3);
+        const x3 = this.x + size * 0.5 * Math.cos(this.angle - Math.PI * 2 / 3); // Coin droit
+        const y3 = this.y + size * 0.5 * Math.sin(this.angle - Math.PI * 2 / 3);
+
+        // Tracer le triangle
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineTo(x3, y3);
+        ctx.closePath();
         ctx.fill();
 
-        //litle line pointer direction
+        // Little line pointer direction
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.x + 20 * Math.cos(this.angle), this.y + 20 * Math.sin(this.angle));
         ctx.stroke();
 
-        //sensors
+        // Sensors
         for (let i = 0; i < this.sensorsAngle.length; i++) {
             ctx.beginPath();
             ctx.moveTo(this.x, this.y);
-            ctx.lineTo(this.x + (1 - this.sensors[i]) * this.maxLenghtSensor * Math.cos(this.angle + this.sensorsAngle[i]), this.y + (1 - this.sensors[i]) * this.maxLenghtSensor * Math.sin(this.angle + this.sensorsAngle[i]));
+            ctx.lineTo(
+                this.x + (1 - this.sensors[i]) * this.maxLenghtSensor * Math.cos(this.angle + this.sensorsAngle[i]),
+                this.y + (1 - this.sensors[i]) * this.maxLenghtSensor * Math.sin(this.angle + this.sensorsAngle[i])
+            );
             ctx.stroke();
         }
     }
@@ -237,6 +266,7 @@ function car() {
         if (output[2][0] > 0.5) {
             this.turn += -1
         }
+        this.speed = Math.min(Math.max(output[3][0]*this.maxSpeed,0), this.maxSpeed);
     }
 
     this.getScore = function() {

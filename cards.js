@@ -196,4 +196,12 @@ var imagesCards3 = [{
   source: "img/simulation/13.png",
   action: "ext/reactionDiffusion/index.html"
 },
+{
+  source: "img/simulation/14.png",
+  action: "ext/geneticNeuralNetwork/index.html"
+},
+{
+  source: "img/simulation/15.png",
+  action: "ext/IAcarsNeuroevolution/index.html"
+},
 ]

@@ -16,6 +16,10 @@ var collecGene = []
 var timeGeneation = 500;
 var ratioMuteGene = 30;
 
+function drawLayer(){
+    console.log(listbird[0].gene)
+}
+
 
 //number of neurone for each layer, first is input, last is output
 var patternLayer = [4, 3, 3, 1]
@@ -26,7 +30,6 @@ for (let i = 0; i < nbBird; i++) {
 }
 
 
-//la boite noir qu'il faut toucher au maximum
 var g = new goal()
 g.reset()
 
@@ -36,7 +39,8 @@ function setup() {
 
 
 function loop() {
-    ctx.clearRect(0, 0, W, H)
+    ctx.fillStyle = "#90C0F0"
+    ctx.fillRect(0, 0, W, H)
     for (let i = 0; i < listbird.length; i++) {
 
         listbird[i].update()
@@ -104,7 +108,11 @@ function bird() {
     this.radius = 5;
     this.color = 0;
     this.score = 0;
-    this.gene = []
+    this.gene = [];
+    this.time=0;
+    this.jumpTime = 15;
+    this.img = new Image(); 
+    this.img.src = 'bird.png';
 
     this.init = function() {
         this.color = getRndColor();
@@ -142,13 +150,12 @@ function bird() {
         if (RectCircleColliding(this.x, this.y, this.radius, g.x, g.y, g.w, g.h)) {
             this.score += 1
         }
+
+        this.time ++;
     }
 
     this.render = function() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 5, 0, 2 * Math.PI)
-        ctx.fill()
+        ctx.drawImage(this.img, this.x - 10, this.y - 10, 20, 20);
     }
 
     //execute le réseau de neurones
@@ -163,8 +170,9 @@ function bird() {
         for (let i = 0; i < this.gene.length; i++) {
             next = layer(next, this.gene[i][0], this.gene[i][1])
         }
-        if (next[0] > 0) {
+        if (next[0] > 0 && this.time >= this.jumpTime) {
             this.jump = true;
+            this.time = 0;
         }
     }
 
@@ -198,7 +206,7 @@ function goal() {
     this.h = 30
 
     this.update = function() {
-        this.x -= 1
+        this.x -= 2
 
         if (this.x < 5) {
             this.reset()
@@ -211,9 +219,9 @@ function goal() {
     }
 
     this.render = function() {
-        ctx.fillStyle = "rgb(0,0,0)";
+        ctx.fillStyle = "#FFA";
         ctx.beginPath();
-        ctx.rect(this.x, this.y, this.w, this.h)
+        ctx.arc(this.x, this.y, 15, 0, 2 * Math.PI)
         ctx.fill()
     }
 }
