@@ -207,6 +207,11 @@ class AutoType {
         this.action.push([-2])
         return this
     }
+    Reset(){
+        this.action = []
+        this.actionNumber = 0
+        return this
+    }
 }
 
 

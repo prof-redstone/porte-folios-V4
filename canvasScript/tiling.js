@@ -75,10 +75,12 @@ function Tiling() {
     }
 
     this.Stop = function() {
+        console.log("Stop Tiling Canvas")
         clearInterval(intervalTime)
     }
 
     this.Start = function() {
+        console.log("Star Tiling Canvas")
         clearInterval(intervalTime)
         this.setup()
         intervalTime = setInterval(() => {

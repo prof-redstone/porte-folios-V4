@@ -1,13 +1,22 @@
+let blinkState
+let blinker
+let helloText
+let autoTypeHelloText
+let autoTypeImTom
+let autoTypewebDeveloper1
+let autoTypewebDeveloper2
+let intervalAnimLetter
+
 //underscore animation blinking
-let blinkState = 1;
-let i = setInterval(() => {
+blinkState = 1;
+blinker = setInterval(() => {
     blinkState = (blinkState == 1) ? 0 : 1
     $(".cursorBlinker").css("opacity", blinkState)
 }, 700)
 
 //animation auto type
-var helloText = document.getElementById("hello-text-WrittingText")
-var autoTypeHelloText = new AutoType({
+helloText = document.getElementById("hello-text-WrittingText")
+autoTypeHelloText = new AutoType({
         parent: helloText,
         writeSpeed: 200,
         deleteSpeed: 200,
@@ -30,7 +39,7 @@ var autoTypeHelloText = new AutoType({
     .Start()
 
 //auto type write 
-var autoTypeImTom = new AutoType({
+autoTypeImTom = new AutoType({
     parent: document.getElementById("ImTom-WrittingText"),
     writeSpeed: 150,
     opacityTransition: 0.2,
@@ -38,7 +47,7 @@ var autoTypeImTom = new AutoType({
 }).Write("{ User : Tom }").Start()
 
 //auto type write 
-var autoTypewebDeveloper = new AutoType({
+autoTypewebDeveloper1 = new AutoType({
     parent: document.getElementById("web-WrittingText"),
     writeSpeed: 200,
     deleteSpeed: 200,
@@ -54,7 +63,7 @@ var autoTypewebDeveloper = new AutoType({
 .Delete(100)
 .Start()
 //espace insécable :   
-var autoTypewebDeveloper = new AutoType({
+autoTypewebDeveloper2 = new AutoType({
     parent: document.getElementById("developer-WrittingText"),
     writeSpeed: 150,
     opacityTransition: 0.2,
@@ -69,7 +78,7 @@ $(".rotHover").hover(function() {
     $(this).addClass("rotationAnimation");
 })
 //characters random qui toune tous les 4s
-let intervalAnimLetter = setInterval(() => {
+intervalAnimLetter = setInterval(() => {
     var el = document.getElementsByClassName('rotEvent');
     var nb = nb_random(0, el.length - 1)
     var classes = ["Yrotation", "Zrotation", "Xrotation"]
@@ -82,6 +91,12 @@ let intervalAnimLetter = setInterval(() => {
     }, 2000, el[nb], classes)
 }, 4000)
 
-function nb_random(min, max) { //fonction générant un nombre aléatoire entier min et max inclue [min;max]
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+function StartSection1(){
+    
+    NeuronWebCanvas.StartNeuroneWeb()
+}
+
+
+function StopSection1(){
+    NeuronWebCanvas.StopNeuronWeb()
 }

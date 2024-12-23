@@ -189,10 +189,12 @@ function grassSimulation() {
     }
 
     this.StopGrassSimulation = function() {
+        console.log("Stop GrassSimulation canvas")
         clearInterval(Interval)
     }
 
     this.StartGrassSimulation = function() {
+        console.log("Start GrassSimulation canvas")
         clearInterval(Interval)
         Interval = setInterval(() => {
             loop()
@@ -268,7 +270,6 @@ function grassSimulation() {
 }
 
 let grassSimulationCanvas = new grassSimulation()
-grassSimulationCanvas.StartGrassSimulation()
 window.addEventListener("resize", () => {
     grassSimulationCanvas.setup()
 });

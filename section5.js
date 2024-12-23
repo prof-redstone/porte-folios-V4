@@ -1,14 +1,23 @@
+let MySkills = new AutoType({
+        parent: document.getElementById("MySkills"),
+        writeSpeed: 100,
+        deleteSpeed: 200,
+        opacityTransition: 0.2,
+        className: ["rotHover"]
+    })
+    .Write("My skills")
+let MySkillsWritten = false;
 
+function StartSection5() {
+    if (!MySkillsWritten) {
+        MySkillsWritten = true;
+        MySkills.Start()
+    }
+}
 
-var MySkills = new AutoType({
-    parent: document.getElementById("MySkills"),
-    writeSpeed: 100,
-    deleteSpeed: 200,
-    opacityTransition: 0.2,
-    className: ["rotHover"]
-})
-.Write("My skills")
-.Start()
+function StopSection5() {
+    MySkills.Pause()
+}
 
 let categorySelecte = 0;
 let btnCategoryArray = []
@@ -17,7 +26,7 @@ let categoryArray = []
 
 document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < 7; i++) {
-        let btn = document.getElementById('skillsBut' + (i+1))
+        let btn = document.getElementById('skillsBut' + (i + 1))
         btn.addEventListener('click', () => {
             categorySelecte = i;
             btnSkillsClick();
@@ -27,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnCategoryArray[0].classList.add('btnCategorySelect')
 
     for (let i = 0; i < 7; i++) {
-        let div = document.getElementById('skillsGrid' + (i+1))
+        let div = document.getElementById('skillsGrid' + (i + 1))
         categoryArray[i] = div;
     }
 
@@ -36,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-function btnSkillsClick(){
+function btnSkillsClick() {
     for (let i = 0; i < 7; i++) {
         btnCategoryArray[i].classList.remove('btnCategorySelect');
         categoryArray[i].classList.remove('skillsGridShow');

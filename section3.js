@@ -1,14 +1,26 @@
-tilingCanvas.Start()
-
-var SomeofmyProjectsTitle = new AutoType({
+let SomeofmyProjectsTitle = new AutoType({
     parent: document.getElementById("SomeofmyProjectsTitle"),
     writeSpeed: 100,
     deleteSpeed: 200,
     opacityTransition: 0.2,
     className: ["rotHover"]
 })
-.Write("Some of my best projects")
-.Start()
+.Write("Some of my best projects");
+let SomeofmyProjectsTitleWritten = false;
+
+function StartSection3(){
+    tilingCanvas.Start()
+    if(!SomeofmyProjectsTitleWritten){
+        SomeofmyProjectsTitle.Start()
+        SomeofmyProjectsTitleWritten = true;
+    }
+}
+
+function StopSection3(){
+    tilingCanvas.Stop()
+}
+
+
 
 function generateCards() {
     const container = document.getElementById('project-cards-container');

@@ -87,3 +87,48 @@ function addVerticalStylesheet() {
         existingLink.remove();
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: [0, 0.01] // Détecte à 0% et 10% de visibilité
+    };
+
+    const sections = document.querySelectorAll('section');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.intersectionRatio >= 0.01) {
+                activateSectionScripts(entry.target.id);
+            } else if (entry.intersectionRatio === 0) {
+                deactivateSectionScripts(entry.target.id);
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(section => observer.observe(section));
+
+    function activateSectionScripts(sectionId) {
+        
+        console.log(`Activation des scripts pour ${sectionId}`);
+
+        if(sectionId == "Home"){StartSection1()}
+        if(sectionId == "AboutMe"){StartSection2()}
+        if(sectionId == "Projects"){StartSection3()}
+        if(sectionId == "Slides"){StartSection4()}
+        if(sectionId == "Skills"){StartSection5()}
+        if(sectionId == "Contact"){StartSection6()}
+    }
+
+    function deactivateSectionScripts(sectionId) {
+        console.log(`Désactivation des scripts pour ${sectionId}`);
+        
+        if(sectionId == "Home"){StopSection1()}
+        if(sectionId == "AboutMe"){StopSection2()}
+        if(sectionId == "Projects"){StopSection3()}
+        if(sectionId == "Slides"){StopSection4()}
+        if(sectionId == "Skills"){StopSection5()}
+        if(sectionId == "Contact"){StopSection6()}
+    }
+});

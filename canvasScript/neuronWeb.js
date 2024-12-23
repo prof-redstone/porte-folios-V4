@@ -140,10 +140,12 @@ function NeuronWeb() {
     }
 
     this.StopNeuronWeb = function() {
+        console.log("Stop NeuronWeb canvas")
         activeLoop = false
     }
 
     this.StartNeuroneWeb = function() {
+        console.log("Start NeuronWeb canvas")
         activeLoop = true
         requestAnimationFrame(neuronWebLoop)
     }

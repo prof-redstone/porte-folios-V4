@@ -17,9 +17,9 @@ var cardsCollection = [
     langage: ["GLSL", "JS"],
     video: "img/videoProject/RayMarching.mp4",
     image: "img/imageProject/RayMarching.jpg",
-    code: "https://github.com/prof-redstone/porte-folios-V4/tree/master/p5js/FractalRaymarching",
-    action: "p5js/FractalRaymarching/index.html",
-    run: "p5js/FractalRaymarching/index.html",
+    code: "https://github.com/prof-redstone/porte-folios-V4/tree/master/ext/FractalRaymarching",
+    action: "ext/FractalRaymarching/index.html",
+    run: "ext/FractalRaymarching/index.html",
     anne: "2023"
   },
   {

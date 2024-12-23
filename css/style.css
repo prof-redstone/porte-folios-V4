@@ -75,6 +75,10 @@ span {
     font-family: "Poppins";
 }
 
+h3{
+    height: 1.5em;
+}
+
 .grand-text {
     font-size: 4.5em;
 }
