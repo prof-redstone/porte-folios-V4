@@ -1,6 +1,6 @@
 let MySkills = new AutoType({
         parent: document.getElementById("MySkills"),
-        writeSpeed: 100,
+        writeSpeed: 50,
         deleteSpeed: 200,
         opacityTransition: 0.2,
         className: ["rotHover"]

@@ -1,6 +1,6 @@
 let WhoAmI = new AutoType({
     parent: document.getElementById("WhoAmITitle"),
-    writeSpeed: 100,
+    writeSpeed: 50,
     deleteSpeed: 200,
     opacityTransition: 0.2,
     className: ["rotHover"]
