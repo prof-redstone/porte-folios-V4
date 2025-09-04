@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wave Simulation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="container">
+        <canvas id="waveSimulation"></canvas>
+        <button class="btn" id="resetButton">Reset</button>
+        <div class="control-wrapper">
+            <label for="intensitySlider">Intensité des couleurs:</label>
+            <input type="range" id="intensitySlider" min="1" max="10" value="10" class="slider">
+            <span id="intensityValue">10</span>
+        </div>
+    </div>
+    <script src="gpu-browser.min.js"></script>
+    <script src="waveSimulation.js"></script>
+    <!--
+    A rajouter:
+    source ponctuelle sur sourie (durée pression click), choix frequence (fixe ou suivi de sourie)
+    btn reset, btn pour placer source, selecteur de bordure.
+    source infini
+    front d'onde avec direction 
+    onde conique 
+    rajouter des obstacle, solide, transparent
+    
+    -->
+</body>
+
+</html>

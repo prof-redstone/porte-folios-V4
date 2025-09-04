@@ -1,0 +1,96 @@
+DISTANCE ESTIMATOR----------------------------
+
+// init
+z = z0
+u = 1      // dz/dz0
+v = 0      // dz/da
+w = 0      // dz/dc
+
+for i in 0..maxIter:
+    // compute powers
+    za = z^a
+    fdz = a * z^(a-1)         // df/dz
+    dza_da = za * Log(z)      // ∂(z^a)/∂a
+    
+    // propagate
+    u = fdz * u
+    w = fdz * w + 1
+    v = fdz * v + dza_da
+    
+    // update orbit
+    z = za + c
+    
+    if |z| > bailout: break
+
+// gradient norm
+//Regarder si on peut pas juste garder u et retirer le reste, voir artefact visuel
+gradNorm = sqrt(|u|^2 + |v|^2 + |w|^2)
+
+// distance
+d = |z| * log(|z|) / gradNorm
+
+---------------------------------------------
+
+// Distance estimator pour f(z) = z^a + c
+// paramètres :
+//   z0 : point initial
+//   a  : exposant (complexe)
+//   c  : paramètre (complexe)
+float distanceFractal(in vec2 z0, in vec2 a, in vec2 c)
+{
+    vec2 z = z0;
+
+    // dérivées partielles
+    vec2 u = vec2(1.0, 0.0); // ∂z/∂z0
+    vec2 v = vec2(0.0, 0.0); // ∂z/∂a
+    vec2 w = vec2(0.0, 0.0); // ∂z/∂c
+
+    float bailout = 1024.0;
+    const int maxIter   = 400;
+    float di = 1.0;
+    float m2 = 0.0;
+
+    for (int i=0; i<maxIter; i++)
+    {
+        m2 = dot(z,z);
+        if (m2 > bailout) { di = 0.0; break; }
+
+        // z^a
+        vec2 za   = cexp(cmul(a, clog(z))); // z^a = exp(a*Log(z))
+
+        // f'(z) = a*z^(a-1)
+        vec2 fdz  = cmul(a, cexp(cmul((a - vec2(1.0,0.0)), clog(z))));
+
+        // ∂(z^a)/∂a = z^a * Log(z)
+        vec2 dza_da = cmul(za, clog(z));
+
+        // propagate derivatives
+        u = cmul(fdz, u);
+        v = cadd(cmul(fdz, v), dza_da);
+        w = cadd(cmul(fdz, w), vec2(1.0,0.0));
+
+        // update orbit
+        z = cadd(za, c);
+    }
+
+    // norme du gradient (dans R^6)
+    float gradNorm2 = dot(u,u) + dot(v,v) + dot(w,w);
+
+    // distance
+    float d = 0.5 * sqrt(m2 / gradNorm2) * log(m2);
+    if (di > 0.5) d = 0.0;
+
+    return d;
+}
+
+
+//formule
+val = ((double)valI + 1 - log(log(val2I)) / 0.6931471805599) * 0.03; //val2I dist (0,0) du dernier point calculé, valI nb iteration avant echapement
+
+vector<Color> listColor = {
+        sf::Color(0, 215, 255),
+        sf::Color(0, 110, 255),
+        sf::Color(0, 0, 255),
+        sf::Color(160, 0, 255),
+        sf::Color(0, 0, 255),
+    };
