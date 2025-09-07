@@ -2,6 +2,7 @@ precision mediump float;
 
 varying vec2 vTexCoord;
 
+const float bailout = 2000.0;
 
 uniform float time;
 uniform vec2 resolution;
@@ -38,7 +39,7 @@ vec3 distanceFractal(in vec2 z0, in vec2 a, in vec2 c)
     vec2 v = vec2(0.0, 0.0); // ∂z/∂a
     vec2 w = vec2(0.0, 0.0); // ∂z/∂c
 
-    float bailout = 1024.0;
+    //float bailout = 1024.0;
     float di = 1.0;
     float m2 = 0.0;
     int it = 0;
@@ -80,23 +81,15 @@ vec3 distanceFractal(in vec2 z0, in vec2 a, in vec2 c)
 
 vec3 getColor(int index) {
 
-    /*
-    vec3 listColor[5];
-    listColor[0] = vec3(0.0, 0.843, 1.0);
-    listColor[1] = vec3(0.0, 0.431, 1.0);
-    listColor[2] = vec3(0.0, 0.0, 1.0);
-    listColor[3] = vec3(0.627, 0.0, 1.0);
-    listColor[4] = vec3(0.0, 0.0, 1.0);
-    */
     int nbColors = 4;
     int i = int(mod(float(index), float(nbColors)));
 
     if (i == 0) {
         return vec3(0.0, 0.0, 0.0);
     } else if (i == 1) {
-        return vec3(0.0, 0.02, 0.37);
+        return vec3(0.0, 0.02, 0.60); 
     } else if (i == 2) {
-        return vec3(0.7, 0.7, 0.7);
+        return vec3(0.8, 0.8, 0.8);
     } else if (i == 3) {
         return vec3(0.0, 0.02, 0.37); //return vec3(0.7, 0.34, 0.00);
     } 
@@ -126,7 +119,7 @@ void main()
 
     vec3 d = distanceFractal(z0,a,c);
     
-	float shadow = clamp( pow(4.0*d.x/izoom,0.15), 0.0, 1.0 )*3.0;    
+	float shadow = clamp( pow(4.0*d.x/izoom,0.15), 0.0, 1.0 )*2.5;    
 
     float colorChangeSpeed = 0.15;
     float colorIndex = (d.y + 1.0 - log(log(d.z)) / 0.6931471805599) * colorChangeSpeed;   
