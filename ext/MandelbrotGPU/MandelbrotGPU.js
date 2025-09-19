@@ -9,7 +9,7 @@ var percentageOfNonDivergence = 0;
 let zoom = 1;
 let centerX = 0.0;
 let centerY = 0.0;
-let it = 500;
+let it = 400;
 
 let e1 = [1.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 let e2 = [0.0, 1.0, 0.0, 0.0, 0.0, 0.0];
@@ -19,9 +19,9 @@ let e5 = [0.0, 0.0, 0.0, 0.0, 1.0, 0.0];
 let e6 = [0.0, 0.0, 0.0, 0.0, 0.0, 1.0];
 
 // z0 z0 c c a a
-let ax1 = [1.0, 0.0, 0.0, 0.0, 0.0, 0.0];
-let ax2 = [0.0, 0.0, 0.0, 0.0, 0.0, 1.0];
-let shift = [0.0, 0.0, 0.0, 0.0, 2.0, 0.0];
+let ax1 = [0.0, 0.0, 1.0, 0.0, 0.0, 0.0];
+let ax2 = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0];
+let shift = [0.0, 0.0, -0.5, 0.0, 2.0, 0.0];
 
 let mousePos6D = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 
@@ -33,12 +33,13 @@ let moveQueue = [];
 //music sounds 
 let audioStarted = false; // pour vérifier si l'audio a déjà été démarré
 let tracks = [];
+let nbTracks = 7;
 let actionSound;
-let tracksNormaliseVolume = [5.0, 3.0, 3.0, 3.0, 3.0, 3.0, 10.0]; // pour ajuster le volume de chaque piste
+let tracksNormaliseVolume = [2.0, 1.0, 1.0, 0.7, 1.0, 0.7, 1.0]; // pour ajuster le volume de chaque piste
 let mainGain;
-let lowpass, reverb; // le filtre
+let lowpass; // le filtre
 
-
+let bubble;
 
 function preload() {
     myShader = loadShader('shader.vert', 'shader.frag');
@@ -55,6 +56,7 @@ function preload() {
     tracks[4] = loadSound("sounds/anotherPlan.mp3");
     tracks[5] = loadSound("sounds/anotherPlan2.mp3");
     tracks[6] = loadSound("sounds/unconfortablePlan.mp3");
+    //Pas oublier update nbTracks !!!!!!!
     actionSound = loadSound("sounds/rightclick.mp3");
 }
 
@@ -68,6 +70,24 @@ function setup() {
 
     posArray = Object.values(positions);
 
+    let bubbleSize = 800;
+    bubble = new DialogueBubble()
+        .setPosition(width/2-bubbleSize/2, 70)
+        .setSize(bubbleSize, 120)
+        .setAnimationSpeed(3000, 2000, 60)
+        .enableBlur(true);
+
+    bubble.addTexts([
+        "Welcome to the fascinating world of the Mandelbrot fractal,",
+        "The Mandelbrot fractal is governed by a single rule: Z<sub>n+1</sub> = Z<sub>n</sub><sup>a</sup> + C.",
+        "Where <em>Z</em> and <em>C</em> are complex numbers...",
+        "But enough math for now... Let’s just enjoy the beauty of the fractal.",
+        "Use your left click to move around,",
+        "Scroll to zoom in and out,",
+        "Whenever you fell ready, press the spacebar to start a guided journey.",
+        "Take your time… every detail hides another world."
+    ]).startAutoMode();
+
     let firstPos = getPosition(0);
     //moveRequest(firstPos.ax1, firstPos.ax2, firstPos.shift, 250, firstPos.zoom);
 
@@ -80,15 +100,11 @@ function setupSound() {
     mainGain.connect();
 
     lowpass = new p5.LowPass();
-    reverb = new p5.Reverb();
 
     document.addEventListener('click', () => { //necessite un click pour démarrer le son
         if (!audioStarted) {
             mainGain.disconnect();
             mainGain.connect(lowpass);
-            lowpass.disconnect();
-            lowpass.connect(reverb);
-            reverb.connect();
 
             for (let t of tracks) {
                 t.disconnect(); // on coupe la sortie directe
@@ -304,7 +320,7 @@ function keyboardInput() {
         this.spacePressed = true;
             actionSound.rate(0.5);
             actionSound.setVolume(0.2)
-            actionSound.play();
+            //actionSound.play();
         NextPosition();
     } else if (!keyIsDown(32)) {
         this.spacePressed = false;
@@ -434,7 +450,7 @@ function updateMousePosition() {
 }
 
 
-function draw() {
+function draw() {    
 
     moveManager();
     keyboardInput();
@@ -507,44 +523,47 @@ function draw() {
     frameCount++;
 }
 
+
+let previousVolumes = new Array(nbTracks).fill(0);
+const smoothingFactor = 0.05;
+
+
 function updateSound(caveness) {
+    //console.log(previousVolumes)
     caveness = constrain(caveness, 0, 1);
 
     // exponentiel pour mieux répartir
     let shaped = pow(caveness, 3);
 
-    let freq = map(shaped, 0, 1, 120, 8000);//frequence du cutoff
-
+    let freq = map(shaped, 0, 1, 130, 8000);//frequence du cutoff
     lowpass.freq(freq);
 
-    //on coupe tous les tracks
-    for (let t of tracks) {
-        t.setVolume(0.0);
-    }
 
     
     //console.log(distanceAlignement(ax1, ax2, e3, e4))
     //mandel avec exposant 2 (plan principal)
     let dist=1;
     let distminforall=1;
+    let distFactor = 0.1;
+    let targetVolumes = new Array(nbTracks).fill(0);
     
     
     dist = distanceToPlane(shift, ax1, ax2, [0, 0, 0, 0, 2, 0], e3, e4);
     distminforall = min(dist, distminforall);
-    if (dist < 0.1) {
-        tracks[0].setVolume(tracksNormaliseVolume[0] * (1.0- 10*dist));
+    if (dist < distFactor) {
+        targetVolumes[0] = (tracksNormaliseVolume[0] * (1.0- (1/distFactor)*dist));
 
     }else{
         //mandel avec exposant reel
         dist = distanceAlignement(ax1, ax2, e3, e4)*2 + abs(shift[5]);
         distminforall = min(dist, distminforall);
-        if (dist < 0.1) {
-            tracks[2].setVolume(tracksNormaliseVolume[2] * (1.0- 10*dist));
+        if (dist < distFactor) {
+            targetVolumes[2] = (tracksNormaliseVolume[2] * (1.0- (1/distFactor)*dist));
         }else{
             dist = distanceAlignement(ax1, ax2, e3, e4)*2
             distminforall = min(dist, distminforall);
-            if(dist < 0.1){
-                tracks[3].setVolume(tracksNormaliseVolume[3] * (1.0- 10*dist));
+            if(dist < distFactor){
+                targetVolumes[3] = (tracksNormaliseVolume[3] * (1.0- (1/distFactor)*dist));
             }
         }
     }    
@@ -552,26 +571,41 @@ function updateSound(caveness) {
     //plan Julia
     dist = distanceAlignement(ax1, ax2, e1, e2);
     distminforall = min(dist, distminforall);
-    if(dist < 0.1){
-        tracks[1].setVolume(tracksNormaliseVolume[1] * (1.0- 10*dist));
+    if(dist < distFactor){
+        targetVolumes[1] = (tracksNormaliseVolume[1] * (1.0- (1/distFactor)*dist));
     }
 
     dist = min(distanceAlignement(ax1, ax2, e5, e6), distanceAlignement(ax1, ax2, e1, e6))
     distminforall = min(dist, distminforall);
-    if(dist < 0.1){
-        tracks[4].setVolume(tracksNormaliseVolume[4] * (1.0- 10*dist));
+    if(dist < distFactor){
+        targetVolumes[4] = (tracksNormaliseVolume[4] * (1.0- (1/distFactor)*dist));
     }
 
     dist = min(distanceAlignement(ax1, ax2, addVec(e3, e5), addVec(e4, e6)), distanceAlignement(ax1, ax2,addVec(e5, e1),addVec(e2, e6)))
     distminforall = min(dist, distminforall);
-    if(dist < 0.1){
-        tracks[5].setVolume(tracksNormaliseVolume[5] * (1.0- 10*dist));
+    if(dist < distFactor){
+        targetVolumes[5] = (tracksNormaliseVolume[5] * (1.0- (1/distFactor)*dist));
     }
 
-    if(distminforall > 0.1){
-        tracks[6].setVolume(tracksNormaliseVolume[6] * min(distminforall-0.1, 0.1)*10);
+    if(distminforall > 0.4){
+        targetVolumes[6] = (tracksNormaliseVolume[6] * min(distminforall-0.4, 0.1)*10);
     }
 
+    for (let i = 0; i < tracks.length; i++) {
+        // Interpolation linéaire vers le volume cible
+        previousVolumes[i] = previousVolumes[i] + (targetVolumes[i] - previousVolumes[i]) * smoothingFactor;
+        
+        // Application seulement si le changement est significatif
+        if (abs(tracks[i].getVolume() - previousVolumes[i]) > 0.0) {
+            tracks[i].setVolume(previousVolumes[i]);
+        }
+    }
+}
+
+function getVolumeOfAllTracks(){
+    for (let i = 0; i < tracks.length; i++) {
+        console.log("track i = ", i, ", v = ", tracks[i].getVolume())
+    }
 }
 
 function windowResized() {
