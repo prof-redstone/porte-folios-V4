@@ -72,23 +72,12 @@ function setup() {
 
     let bubbleSize = 800;
     bubble = new DialogueBubble()
-        .setPosition(width/2-bubbleSize/2, 70)
+        .setPosition(width/2-bubbleSize/2, 50)
         .setSize(bubbleSize, 120)
         .setAnimationSpeed(3000, 2000, 60)
         .enableBlur(true);
 
-    bubble.addTexts([
-        "Welcome to the fascinating world of the Mandelbrot fractal,",
-        "The Mandelbrot fractal is governed by a single rule: Z<sub>n+1</sub> = Z<sub>n</sub><sup>a</sup> + C.",
-        "Where <em>Z</em> and <em>C</em> are complex numbers...",
-        "But enough math for now... Let’s just enjoy the beauty of the fractal.",
-        "Use your left click to move around,",
-        "Scroll to zoom in and out,",
-        "Whenever you fell ready, press the spacebar to start a guided journey.",
-        "Take your time… every detail hides another world."
-    ]).startAutoMode();
-
-    let firstPos = getPosition(0);
+    //let firstPos = getPosition(0);
     //moveRequest(firstPos.ax1, firstPos.ax2, firstPos.shift, 250, firstPos.zoom);
 
     //sounds
@@ -102,6 +91,8 @@ function setupSound() {
     lowpass = new p5.LowPass();
 
     document.addEventListener('click', () => { //necessite un click pour démarrer le son
+        
+
         if (!audioStarted) {
             mainGain.disconnect();
             mainGain.connect(lowpass);
@@ -375,7 +366,11 @@ function NextPosition() {
             let zoomDuration = baseDuration + (logDistance * scaleFactor);
             moveRequest(ax1, ax2, shift, zoomDuration, 1.0);
         }
-        moveRequest(pos.ax1, pos.ax2, pos.shift, 250, 1.0);
+        if(pos.zoom < 1.0){
+            moveRequest(pos.ax1, pos.ax2, pos.shift, 250, pos.zoom);
+        }else{
+            moveRequest(pos.ax1, pos.ax2, pos.shift, 250, 1.0);
+        }
 
         let logDistance = Math.abs(Math.log2(1.0 / pos.zoom));
         let zoomDuration = baseDuration + (logDistance * scaleFactor);
@@ -385,6 +380,20 @@ function NextPosition() {
         if (pos.note == "Rotate Space") { //go at location then turn into Julia
             console.log("Rotation de l'espace demandé par la position");
             rotateSpace(pos.shift, 1);
+        }
+
+        if(pos.dialogue != undefined){
+            if(pos.dialDelay != undefined){
+                setTimeout((bubble)=>{
+                    console.log("oui")
+                    bubble.addTexts(pos.dialogue)
+                    bubble.startAutoMode()
+                }, pos.dialDelay*1000, bubble)
+            }else{
+                console.log("non")
+                bubble.addTexts(pos.dialogue)
+                bubble.startAutoMode()
+            }
         }
     }
 }
@@ -512,7 +521,6 @@ function draw() {
         }
         percentageOfNonDivergence = BlackCount / (maskBuffer.width * maskBuffer.height);
         percentageOfHighDivergence = GreyCount / (maskBuffer.width * maskBuffer.height);
-        //console.log("Non-div %: " + percentageOfNonDivergence*100+"%")
     }
 
     if (audioStarted) {
@@ -529,7 +537,6 @@ const smoothingFactor = 0.05;
 
 
 function updateSound(caveness) {
-    //console.log(previousVolumes)
     caveness = constrain(caveness, 0, 1);
 
     // exponentiel pour mieux répartir
@@ -540,7 +547,6 @@ function updateSound(caveness) {
 
 
     
-    //console.log(distanceAlignement(ax1, ax2, e3, e4))
     //mandel avec exposant 2 (plan principal)
     let dist=1;
     let distminforall=1;
@@ -613,3 +619,4 @@ function windowResized() {
 }
 
 document.addEventListener('contextmenu', e => e.preventDefault()); //desactive le menu contextuel au clic droit
+

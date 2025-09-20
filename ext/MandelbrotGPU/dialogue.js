@@ -6,31 +6,31 @@ class DialogueBubble {
         // Configuration
         this.config = {
             // Position (pourcentages ou pixels)
-            x: 50,              // pixels depuis la gauche
-            y: 50,              // pixels depuis le haut
-            width: 350,         // largeur en pixels
-            minHeight: 100,     // hauteur minimum
-            
+            x: 50, // pixels depuis la gauche
+            y: 50, // pixels depuis le haut
+            width: 350, // largeur en pixels
+            minHeight: 100, // hauteur minimum
+
             // Style
-            backgroundColor: 'rgba(58, 58, 58, 0.31)',
+            backgroundColor: 'rgba(58, 58, 58, 0.26)',
             borderColor: 'rgba(255, 255, 255, 0)',
             borderWidth: '1px',
             borderRadius: '40px',
             textColor: '#ffffffde',
-            fontSize: '30px',
-            
+            fontSize: '35px',
+
             // Animations zen (en ms)
             fadeInDuration: 3000,
             fadeOutDuration: 2000,
             typewriterSpeed: 80,
-            displayDuration: 10000,  // Durée par défaut plus courte
+            displayDuration: 8000, // Durée par défaut plus courte
             pauseBetweenTexts: 1000,
-            
+
             // Options
             useTypewriter: false,
             useBlur: true,
         };
-        
+
         // État
         this.currentText = "";
         this.isVisible = false;
@@ -39,20 +39,20 @@ class DialogueBubble {
         this.textQueue = [];
         this.currentQueueIndex = 0;
         this.autoMode = false;
-        
+
         // Éléments DOM
         this.container = null;
         this.textElement = null;
         this.buttonElement = null;
-        
+
         // Timers
         this.fadeTimer = null;
         this.typewriterTimer = null;
         this.displayTimer = null;
-        
+
         this.createElements();
     }
-    
+
     createElements() {
         // Container principal
         this.container = document.createElement('div');
@@ -78,13 +78,13 @@ class DialogueBubble {
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             pointer-events: none;
         `;
-        
+
         // Effet de flou si demandé
         if (this.config.useBlur) {
             this.container.style.backdropFilter = 'blur(5px)';
             this.container.style.webkitBackdropFilter = 'blur(5px)';
         }
-        
+
         // Texte
         this.textElement = document.createElement('div');
         this.textElement.style.cssText = `
@@ -93,7 +93,7 @@ class DialogueBubble {
             line-height: 1.4;
             min-height: 60px;
         `;
-        
+
         // Bouton (caché par défaut)
         this.buttonElement = document.createElement('button');
         this.buttonElement.style.cssText = `
@@ -110,22 +110,22 @@ class DialogueBubble {
             transform: translateY(5px);
             pointer-events: none;
         `;
-        
+
         this.buttonElement.addEventListener('mouseenter', () => {
             this.buttonElement.style.background = 'rgba(255, 255, 255, 0.2)';
             this.buttonElement.style.transform = 'translateY(0px)';
         });
-        
+
         this.buttonElement.addEventListener('mouseleave', () => {
             this.buttonElement.style.background = 'rgba(255, 255, 255, 0.1)';
         });
-        
+
         // Assemblage
         this.container.appendChild(this.textElement);
         this.container.appendChild(this.buttonElement);
         document.body.appendChild(this.container);
     }
-    
+
     // Configuration facile
     setPosition(x, y) {
         this.config.x = x;
@@ -134,7 +134,7 @@ class DialogueBubble {
         this.container.style.top = `${y}px`;
         return this;
     }
-    
+
     setSize(width, minHeight) {
         this.config.width = width;
         this.config.minHeight = minHeight;
@@ -142,20 +142,20 @@ class DialogueBubble {
         this.container.style.minHeight = `${minHeight}px`;
         return this;
     }
-    
+
     setAnimationSpeed(fadeIn, fadeOut, typewriter) {
         this.config.fadeInDuration = fadeIn;
         this.config.fadeOutDuration = fadeOut;
         this.config.typewriterSpeed = typewriter;
         return this;
     }
-    
+
     // NOUVEAU: méthode pour définir la durée d'affichage
     setDisplayDuration(duration) {
         this.config.displayDuration = duration;
         return this;
     }
-    
+
     setStyle(bgColor, textColor, borderColor) {
         if (bgColor) {
             this.config.backgroundColor = bgColor;
@@ -172,7 +172,7 @@ class DialogueBubble {
         }
         return this;
     }
-    
+
     enableBlur(enable) {
         this.config.useBlur = enable;
         if (enable) {
@@ -184,16 +184,16 @@ class DialogueBubble {
         }
         return this;
     }
-    
+
     // Afficher un texte avec bouton optionnel
     showText(text, buttonText = null, buttonCallback = null, duration = null) {
         this.clearTimers();
-        
+
         this.currentText = text;
         this.typewriterIndex = 0;
         this.isVisible = true;
         this.animationState = "fading_in";
-        
+
         // Configuration du bouton
         if (buttonText && buttonCallback) {
             this.buttonElement.textContent = buttonText;
@@ -205,20 +205,27 @@ class DialogueBubble {
             this.buttonElement.style.opacity = '0';
             this.buttonElement.style.pointerEvents = 'none';
         }
-        
-        // Animation d'entrée
+
+        // CORRECTION : Forcer le navigateur à calculer l'état initial
         this.container.style.pointerEvents = 'auto';
-        this.container.style.opacity = '1';
-        this.container.style.transform = 'translateY(0px)';
-        
+
+        // Forcer un reflow pour s'assurer que l'état initial est bien pris en compte
+        this.container.offsetHeight;
+
+        // Puis appliquer l'animation d'entrée
+        requestAnimationFrame(() => {
+            this.container.style.opacity = '1';
+            this.container.style.transform = 'translateY(0px)';
+        });
+
         // Démarrer le typewriter
         if (this.config.useTypewriter) {
             this.startTypewriter();
         } else {
-            this.textElement.innerHTML = text;  // Changé en innerHTML
+            this.textElement.innerHTML = text;
             this.showButton();
         }
-        
+
         // Timer de disparition automatique (si pas de bouton ET pas en mode auto)
         if (!buttonText && !this.autoMode) {
             const displayTime = duration || this.config.displayDuration;
@@ -228,20 +235,20 @@ class DialogueBubble {
                 }, displayTime);
             }
         }
-        
+
         return this;
     }
-    
+
     startTypewriter() {
-        this.textElement.innerHTML = "";  // Changé en innerHTML
+        this.textElement.innerHTML = ""; // Changé en innerHTML
         this.typewriterIndex = 0;
-        
+
         // Pour le typewriter avec HTML, on doit traiter différemment
         // On va créer un div temporaire pour parser le HTML
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = this.currentText;
         const plainText = tempDiv.textContent || tempDiv.innerText || '';
-        
+
         const typeNextChar = () => {
             if (this.typewriterIndex < plainText.length) {
                 // Pour l'effet typewriter, on utilise le texte brut
@@ -254,10 +261,10 @@ class DialogueBubble {
                 this.showButton();
             }
         };
-        
+
         typeNextChar();
     }
-    
+
     showButton() {
         if (this.buttonElement.textContent.trim() !== '') {
             setTimeout(() => {
@@ -267,47 +274,50 @@ class DialogueBubble {
             }, 500); // petit délai après la fin du texte
         }
     }
-    
+
     // File d'attente de textes
     addTexts(texts) {
         this.textQueue = Array.isArray(texts) ? texts : [texts];
         this.currentQueueIndex = 0;
         return this;
     }
-    
+
     startAutoMode() {
         if (this.textQueue.length > 0) {
             this.autoMode = true;
             this.currentQueueIndex = 0;
-            this.showNextInQueue();
+
+            // CORRECTION : Petit délai pour permettre au CSS de s'initialiser
+            setTimeout(() => {
+                if (this.autoMode) { // Vérifier que le mode auto n'a pas été arrêté entre temps
+                    this.showNextInQueue();
+                }
+            }, 100); // 100ms suffisent généralement
         }
         return this;
     }
-    
+
     // MÉTHODE CORRIGÉE - Une seule fois
     showNextInQueue() {
         if (!this.autoMode || this.textQueue.length === 0) {
             return;
         }
-        
+
         const text = this.textQueue[this.currentQueueIndex];
         console.log(`Affichage du texte ${this.currentQueueIndex}: "${text}"`); // Debug
-        
+
         // Afficher le texte actuel
         this.showText(text, null, null, null);
-        
+
         // Programmer la transition vers le texte suivant
         const displayTime = this.config.displayDuration;
-        console.log(`Timer programmé pour ${displayTime}ms`); // Debug
-        
+
         this.displayTimer = setTimeout(() => {
-            console.log("Timer expiré, transition vers le texte suivant"); // Debug
-            
+
             this.hide(() => {
                 // Passer au texte suivant
                 this.currentQueueIndex++;
-                console.log(`Index suivant: ${this.currentQueueIndex}`); // Debug
-                
+
                 // Vérifier s'il reste des textes à afficher
                 if (this.currentQueueIndex < this.textQueue.length) {
                     // Il reste des textes, continuer
@@ -318,23 +328,22 @@ class DialogueBubble {
                     }, this.config.pauseBetweenTexts);
                 } else {
                     // Tous les textes ont été affichés, arrêter le mode auto
-                    console.log("Tous les textes ont été affichés, arrêt du mode auto");
                     this.autoMode = false;
                 }
             });
         }, displayTime);
     }
-    
+
     // Cacher la bulle
     hide(callback = null) {
         this.clearTimers();
         this.animationState = "fading_out";
-        
+
         this.container.style.opacity = '0';
         this.container.style.transform = 'translateY(-10px)';
         this.buttonElement.style.opacity = '0';
         this.buttonElement.style.pointerEvents = 'none';
-        
+
         setTimeout(() => {
             this.isVisible = false;
             this.animationState = "hidden";
@@ -342,14 +351,14 @@ class DialogueBubble {
             if (callback) callback();
         }, 500);
     }
-    
+
     // Arrêter le mode auto
     stopAutoMode() {
         this.autoMode = false;
         this.clearTimers();
         console.log("Mode automatique arrêté"); // Debug
     }
-    
+
     clearTimers() {
         if (this.fadeTimer) {
             clearTimeout(this.fadeTimer);
@@ -364,7 +373,7 @@ class DialogueBubble {
             this.displayTimer = null;
         }
     }
-    
+
     // Nettoyer complètement
     destroy() {
         this.clearTimers();

@@ -18,10 +18,95 @@
             padding: 0;
             margin: 0;
         }
+        main {
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #warning-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.938);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #warning-text {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 40px;
+            color: #2930ff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            max-width: 80%;
+            line-height: 1.2;
+        }
+
+        #start-button {
+            font-size: 1.5em;
+            padding: 15px 40px;
+            background: #2930ff;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        #start-button:active {
+            transform: translateY(0);
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 
 <body>
+    <div id="warning-overlay">
+        <div id="warning-text">
+            ⚠️ WARNING ⚠️<br>
+            The following animation may contain<br>
+            flashing or intense visuals
+        </div>
+        <button id="start-button" onclick="startAnimation()">
+            Enter Experience
+        </button>
+    </div>
+
+    <script>
+        function startAnimation() {
+            document.getElementById('warning-overlay').classList.add('hidden');            
+            NextPosition();
+        }
+
+        // Permettre de démarrer avec la touche Entrée aussi
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && !document.getElementById('warning-overlay').classList.contains('hidden')) {
+                startAnimation();
+            }
+        });
+    </script>
     <style>
         main {
             background-color: black;
