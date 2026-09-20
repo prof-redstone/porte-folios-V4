@@ -27,6 +27,7 @@ let mousePos6D = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 
 //postion et transitions
 let positions = [];
+let posArray;
 let positionIndex = 0;
 let moveQueue = [];
 
