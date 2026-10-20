@@ -1,6 +1,16 @@
 
 var cardsCollection = [
   {
+    title: "Minecraft Clone",
+    description: "A from-scratch recreation of Minecraft's core gameplay in C++ and OpenGL, with no game engine. I first built my own 3D engine (lighting, shadow mapping, skybox), then grew it into a voxel world: chunk streaming, Perlin-noise terrain, multiple biomes with procedural trees and vegetation, 29 block types, block placing/breaking via voxel raycasting, real-time shadows and player physics. Everything from meshing to world generation was written by hand.",
+    langage: ["C++", "OpenGL", "GLFW", "GLSL"],
+    video: "img/videoProject/Minecraft.mp4",
+    image: "img/imageProject/Minecraft.jpg",
+    code: "https://github.com/prof-redstone/minecraft",
+    action: "https://github.com/prof-redstone/minecraft",
+    anne: "2025"
+  },
+  {
     title: "GLaDOS Project",
     description: "Video summarizing the creation process of GLaDOS, my new connected home assistant inspired by the game Portal, from modeling its head, 3D printing, developing the internal AI, enabling it to speak with its authentic voice, and more.",
     langage: ["C", "python", "3D modeling", "3D printing", "AI"],

@@ -1,20 +1,60 @@
-.holdImg-carrousel{
+.carrousel-track {
+    display: flex;
+    width: max-content;
+    flex: none;
+    will-change: transform;
+    animation: carrousel-scroll var(--duration) linear infinite;
+    animation-play-state: paused;
+}
+
+.carrousel-track--play {
+    animation-play-state: running;
+}
+
+.carrousel-track--reverse {
+    animation-name: carrousel-scroll-reverse;
+}
+
+.holdImg-carrousel {
     width: 200px;
     height: 200px;
+    margin-right: 20px;
     border-radius: 5px;
-    position: absolute;
-    transition: all 2s cubic-bezier(0.25, 0.1, 0.25, 1);
     overflow: hidden;
+    flex: none;
 }
 
-.cache_carrousel{
-    height: 200px; width: 100px; z-index: 10;
+.cache_carrousel {
+    height: 200px;
+    width: 100px;
+    z-index: 10;
 }
 
-.img-carrousel{
-    transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);    
+.img-carrousel {
+    display: block;
+    width: 200px;
+    height: 200px;
+    transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-.img-carrousel:hover{
-    transform:scale(1.1)
+.img-carrousel:hover {
+    transform: scale(1.1);
+}
+
+@keyframes carrousel-scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(var(--shift));
+    }
+}
+
+@keyframes carrousel-scroll-reverse {
+    from {
+        transform: translateX(var(--shift));
+    }
+    to {
+        transform: translateX(0);
+    }
 }
