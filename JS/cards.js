@@ -33,16 +33,6 @@ var cardsCollection = [
     anne: "2023"
   },
   {
-    title: "Fractals generator",
-    description: "A program for visualizing and navigating Mandelbrot fractals, the Julia set, and the Burning Ship. The program is written in C++ using SFML, with customizable colors and rendering parameters.",
-    langage: ["C++", "SFML"],
-    video: "img/videoProject/PresFractalC++.mp4",
-    image: "img/imageProject/PresFractalC++.jpg",
-    code: "https://github.com/prof-redstone/fractals-generator",
-    action: "https://github.com/prof-redstone/fractals-generator",
-    anne: "2021"
-  },
-  {
     title: "Sandbox simulation",
     description: "C++ sandbox simulation built from scratch, using SFML library for rendering. The simulation features a variety of materials, each with unique physical properties and behaviors, such as reacting to heat, dissolving in water, or being set on fire... Dynamic interactions include lava cooling into stone, water evaporating into steam, and acid corroding materials, allowing for the creation of complex, interactive environments.",
     langage: ["C++", "SFML"],
@@ -52,6 +42,19 @@ var cardsCollection = [
     action: "https://github.com/prof-redstone/sandbox",
     anne: "2022"
   },
+  {
+    title: "Fractals generator",
+    description: "A program for visualizing and navigating Mandelbrot fractals, the Julia set, and the Burning Ship. The program is written in C++ using SFML, with customizable colors and rendering parameters.",
+    langage: ["C++", "SFML"],
+    video: "img/videoProject/PresFractalC++.mp4",
+    image: "img/imageProject/PresFractalC++.jpg",
+    code: "https://github.com/prof-redstone/fractals-generator",
+    action: "https://github.com/prof-redstone/fractals-generator",
+    anne: "2021"
+  },
+];
+
+var archivedCardsCollection = [
   {
     title: "Board game online",
     description: "A Node.js server using Socket.io that enables turn-based board games to be played from anywhere in the world. It features the ability to create public or private game rooms that can be joined with a code, includes an integrated instant chat, and allows users to customize their nickname.",
