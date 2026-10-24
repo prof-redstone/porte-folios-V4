@@ -21,14 +21,14 @@
 
 <body id="main">
     <div id="navbar">
-        <div style="align-items: center;">
-            <a href="">
-                <img src="img/ico.png" alt="ico" style="width: 40px;">
+        <div class="navbar-brand">
+            <a href="#Home" aria-label="Tom Demagny, back to home">
+                <img class="navbar-logo" src="img/ico.png" alt="Tom Demagny">
             </a>
             <p>Tom Demagny</p>
         </div>
         <div>
-            <a href="" class="underline-blue color1-text">
+            <a href="#Home" class="underline-blue color1-text">
                 <p>Home</p>
             </a>
             <a href="#AboutMe" class="underline-blue color1-text">
@@ -48,26 +48,25 @@
             </a>
         </div>
     </div>
-    <section id="Home" class="sectionPage" style="height: 100vh; scroll-snap-align: start;">
+    <section id="Home" class="sectionPage home-section">
         <div class="background">
-            <div style="width: 100vw; height: 100vh; background-color: #0000004b; position: absolute;"></div>
-            <canvas class="neuronWeb" id="neuronWeb" style="width: 100vw; height: 100vh; "></canvas>
+            <div class="home-overlay"></div>
+            <canvas class="neuronWeb home-canvas" id="neuronWeb"></canvas>
         </div>
-        <div style=" position: absolute; width: 100vw; height: 100vh; display: flex; align-items: center;">
-            <div class="grand-text"
-                style="z-index: 1; padding: 0 20px; color: #dfdfdf; padding-left: 1.5em; user-select: none;">
+        <div class="home-content">
+            <div class="grand-text home-title-block">
                 <div>
-                    <span class="cursorBlinker rotHover"> </span>
-                    <h1 id="hello-text-WrittingText" style="display: inline;">Hello,</h1>
+                    <span class="cursorBlinker rotHover"> </span>
+                    <h1 id="hello-text-WrittingText">Hello,</h1>
                     <span class="cursorBlinker rotHover"> _</span>
                 </div>
-                <div style="display: flex;">
-                    <span class="cursorBlinker rotHover"> </span>
-                    <h1 id="ImTom-WrittingText" style="display: inline;">{ user : Tom }</h1>
+                <div class="home-line">
+                    <span class="cursorBlinker rotHover"> </span>
+                    <h1 id="ImTom-WrittingText">{ user : Tom }</h1>
                 </div>
-                <div style="display: flex;">
-                    <span class="cursorBlinker rotHover"> </span>
-                    <h1 id="web-WrittingText" style="width: 3.7ch;">web </h1>
+                <div class="home-line">
+                    <span class="cursorBlinker rotHover"> </span>
+                    <h1 id="web-WrittingText">web </h1>
                     <h1 id="developer-WrittingText">developer</h1>
                 </div>
             </div>
@@ -76,7 +75,7 @@
 
 
     <div>
-        <svg class="svg-curve" viewBox="0 0 1440 78" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+        <svg class="svg-curve" viewBox="0 0 1440 78" xmlns="http://www.w3.org/2000/svg">
             <path class="color1"
                 d="M -100 79 C -100 79 218.416 23.165 693.5 23.165 C 1168.58 23.165 1487 79 1487 79 V 79 H -100 V 79 Z">
             </path>
@@ -84,52 +83,49 @@
     </div>
 
 
-    <section id="AboutMe" class="sectionPage" style="min-height: 60vh; scroll-snap-align: start;">
+    <section id="AboutMe" class="sectionPage about-section">
         <div class="background">
-            <div style="position: relative;">
-                <div class="color1" style="height: 100vh; width: 100vw;"></div>
+            <div class="relative">
+                <div class="color1 section-backdrop"></div>
             </div>
         </div>
         <div>
-            <div style="width: 80%; margin: 0 auto; text-align: center; padding-bottom: 20px;">
-                <h3 id="WhoAmITitle" style="margin-bottom: 40px; font-size: 4em;">Who am I ?</h3>
-                <div
-                    style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-top: 30px;">
-
-                    <span style="width: 70%; font-size: 1.3em; line-height: 1.6; text-align: left;">
-                        <p style="margin-top: 10px;">
+            <div class="about-inner">
+                <h3 id="WhoAmITitle" class="section-title">Who am I ?</h3>
+                <div class="about-layout">
+                    <div class="about-text">
+                        <p>
                             I'm Tom Demagny, a French engineering student pursuing a double degree in
                             Mathematical Engineering and Data Science at
-                            <a href="https://polytech-clermont.fr" target="_blank"
+                            <a href="https://polytech-clermont.fr" target="_blank" rel="noopener"
                                 class="underline-blue color3-text">Polytech Clermont</a>
                             and Artificial Intelligence at
-                            <a href="https://www.uqac.ca" target="_blank" class="underline-blue color3-text">Université
+                            <a href="https://www.uqac.ca" target="_blank" rel="noopener" class="underline-blue color3-text">Université
                                 du Québec à Chicoutimi</a> (UQAC),
                             Canada.
                         </p>
 
-                        <p style="margin-top: 10px;">
+                        <p>
                             I'm passionate about programming, mathematical modeling, and low-level technologies.
                             My experience spans C/C++, OpenGL, Python, and machine learning, with personal projects
                             ranging from fractal exploration and real-time rendering to physics simulations and
                             embedded systems.
                         </p>
 
-                        <p style="margin-top: 10px;">
+                        <p>
                             I like building things from scratch and understanding what happens beneath the surface.
                             Whether I'm writing a rendering engine, experimenting with fractals, connecting hardware
                             to software, or exploring cryptography, I enjoy the process of figuring things out and
                             turning ideas into something tangible.
                         </p>
 
-                        <p style="margin-top: 10px;">
+                        <p>
                             For me, programming is as much about curiosity and experimentation as it is about solving
                             problems. I'm always looking for something new to understand, build, or break apart.
                         </p>
-                    </span>
-                    <img class="rotHover" src="img/me.webp" alt="personal picture" width="600" height="600"
-                        loading="lazy" decoding="async"
-                        style="max-width: 30%; height: auto; filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.3)); border-radius: 50%;">
+                    </div>
+                    <img class="rotHover about-photo" src="img/me.webp" alt="Portrait of Tom Demagny" width="600" height="600"
+                        loading="lazy" decoding="async">
                 </div>
             </div>
         </div>
@@ -140,109 +136,92 @@
 
     <section class="sectionPage" id="Projects">
         <div class="background">
-            <div style="position: relative;">
-                <div style="position: absolute;">
+            <div class="relative">
+                <div class="absolute">
                     <div>
-                        <canvas id="tilingCanvas" style="z-index: 0; position: absolute;"></canvas>
+                        <canvas class="section-canvas" id="tilingCanvas"></canvas>
                     </div>
                 </div>
             </div>
         </div>
         <div>
-            <svg class="svg-curve" viewBox="0 0 1440 40" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+            <svg class="svg-curve" viewBox="0 0 1440 40" xmlns="http://www.w3.org/2000/svg">
                 <path class="color1" d="m1 0s305 35 789 37c486-10 633-29 798-37v0h-1589z">
                 </path>
             </svg>
         </div>
-        <div
-            style="height: 100%; flex-direction: column; justify-content: space-evenly;  text-align: center; padding-top: 100px; scroll-snap-align: start;">
-            <h3 class="color1-text" id="SomeofmyProjectsTitle" style="margin-bottom: 40px; font-size: 4em;">Some of
+        <div class="projects-content">
+            <h3 class="color1-text section-title" id="SomeofmyProjectsTitle">Some of
                 my best projects</h3>
-            <div id="project-cards-container" style="margin-bottom: 100px;">
+            <div class="project-cards" id="project-cards-container">
 
             </div>
         </div>
     </section>
 
     <div>
-        <svg class="svg-curve" viewBox="0 0 1440 78" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+        <svg class="svg-curve" viewBox="0 0 1440 78" xmlns="http://www.w3.org/2000/svg">
             <path class="color1"
                 d="M -100 79 C -100 79 218.416 23.165 693.5 23.165 C 1168.58 23.165 1487 79 1487 79 V 79 H -100 V 79 Z">
             </path>
         </svg>
     </div>
 
-    <section id="Slides" class="sectionPage" style="min-height: 60vh; scroll-snap-align: start;">
+    <section id="Slides" class="sectionPage slides-section">
         <div class="background">
-            <div style="position: relative;">
-                <div class="color1" style="height: 100vh; width: 100vw;"></div>
+            <div class="relative">
+                <div class="color1 section-backdrop"></div>
             </div>
         </div>
         <div>
-            <div style="padding-bottom: 20px; display: flex; flex-direction: column; align-items: center;">
-                <h3 id="Otherprojects" style="margin-bottom: 40px; font-size: 4em;">Other projects</h3>
+            <div class="slides-inner">
+                <h3 id="Otherprojects" class="section-title">Other projects</h3>
 
-                <div style="width: 95%; display: flex; justify-content: center; margin: 20px 0 20px 0;">
-                    <div style="position: relative;">
-                        <div class="cache_carrousel"
-                            style=" background: linear-gradient(to right, #ebf0f5 00%, rgba(255, 255, 255, 0) 100%); position: absolute;left: 0;">
-                        </div>
+                <div class="carrousel-row">
+                    <div class="carrousel-fade">
+                        <div class="cache_carrousel cache_carrousel-left"></div>
                     </div>
-                    <div id="carrouselImages1" style="position: relative; overflow-x: hidden; width: inherit;"></div>
-                    <div style="position: relative;">
-                        <div class="cache_carrousel"
-                            style="background: linear-gradient(to left, #ebf0f5 0%, rgba(255, 255, 255, 0) 100%); position: absolute; right: 0;">
-                        </div>
+                    <div class="carrousel-viewport" id="carrouselImages1"></div>
+                    <div class="carrousel-fade">
+                        <div class="cache_carrousel cache_carrousel-right"></div>
                     </div>
                 </div>
 
-
-                <div style="width: 95%; display: flex; justify-content: center; margin: 20px 0 20px 0;">
-                    <div style="position: relative;">
-                        <div class="cache_carrousel"
-                            style=" background: linear-gradient(to right, #ebf0f5 00%, rgba(255, 255, 255, 0) 100%); position: absolute;left: 0;">
-                        </div>
+                <div class="carrousel-row">
+                    <div class="carrousel-fade">
+                        <div class="cache_carrousel cache_carrousel-left"></div>
                     </div>
-                    <div id="carrouselImages2" style="position: relative; overflow-x: hidden; width: inherit;"></div>
-                    <div style="position: relative;">
-                        <div class="cache_carrousel"
-                            style="background: linear-gradient(to left, #ebf0f5 0%, rgba(255, 255, 255, 0) 100%); position: absolute; right: 0;">
-                        </div>
+                    <div class="carrousel-viewport" id="carrouselImages2"></div>
+                    <div class="carrousel-fade">
+                        <div class="cache_carrousel cache_carrousel-right"></div>
                     </div>
                 </div>
 
-                <div style="width: 95%; display: flex; justify-content: center; margin: 20px 0 20px 0;">
-                    <div style="position: relative;">
-                        <div class="cache_carrousel"
-                            style=" background: linear-gradient(to right, #ebf0f5 00%, rgba(255, 255, 255, 0) 100%); position: absolute;left: 0;">
-                        </div>
+                <div class="carrousel-row">
+                    <div class="carrousel-fade">
+                        <div class="cache_carrousel cache_carrousel-left"></div>
                     </div>
-                    <div id="carrouselImages3" style="position: relative; overflow-x: hidden; width: inherit;"></div>
-                    <div style="position: relative;">
-                        <div class="cache_carrousel"
-                            style="background: linear-gradient(to left, #ebf0f5 0%, rgba(255, 255, 255, 0) 100%); position: absolute; right: 0;">
-                        </div>
+                    <div class="carrousel-viewport" id="carrouselImages3"></div>
+                    <div class="carrousel-fade">
+                        <div class="cache_carrousel cache_carrousel-right"></div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </section>
 
     <section id="Skills">
         <div class="background">
-            <div style="position: relative;">
-                <div class="color1" style="height: 100vh; width: 100vw;"></div>
+            <div class="relative">
+                <div class="color1 section-backdrop"></div>
             </div>
         </div>
         <div>
-            <div style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; ">
-                <h3 id="MySkills" style="margin-bottom: 40px; font-size: 4em;">My skills</h3>
+            <div class="skills-inner">
+                <h3 id="MySkills" class="section-title">My skills</h3>
 
-                <div
-                    style="display: flex;  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); border-radius: 20px; background-color: #ffffff; padding: 10px;">
-                    <div class="color2-text" style="display: flex; flex-direction: column;">
+                <div class="skills-panel">
+                    <div class="color2-text skills-menu">
                         <div class="skillsButon" id="skillsBut1">
                             <p>Software Development</p>
                         </div>
@@ -265,7 +244,7 @@
                             <p>Others</p>
                         </div>
                     </div>
-                    <div style="width: 500px; padding: 50px; ">
+                    <div class="skills-content">
 
                         <div class="skillsGrid" id="skillsGrid1">
                             <div class="skillElement">
@@ -277,11 +256,11 @@
                                 <p>C++</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Python.svg" alt="python">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Python.svg" alt="Python">
                                 <p>Python</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/OCaml.svg" alt="ocaml">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/OCaml.svg" alt="OCaml">
                                 <p>OCaml</p>
                             </div>
                             <div class="skillElement">
@@ -296,26 +275,22 @@
 
                         <div class="skillsGrid" id="skillsGrid2">
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Html.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Html.svg" alt="HTML">
                                 <p>HTML</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Css.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Css.svg" alt="CSS">
                                 <p>CSS</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/JavaScript.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/JavaScript.svg" alt="JS">
                                 <p>JS</p>
-                            </div>
-                            <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/JQuery.svg" alt="C++">
-                                <p>JQuery</p>
                             </div>
                         </div>
 
                         <div class="skillsGrid" id="skillsGrid3">
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/NodeJS.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/NodeJS.svg" alt="NodeJS">
                                 <p>NodeJS</p>
                             </div>
                             <div class="skillElement">
@@ -331,91 +306,91 @@
                                 <p>SQL</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Socket_io.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Socket_io.svg" alt="Socket.io">
                                 <p>Socket.io</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/JavaScript.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/JavaScript.svg" alt="JS">
                                 <p>JS</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Git.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Git.svg" alt="Git">
                                 <p>Git</p>
                             </div>
                         </div>
 
                         <div class="skillsGrid" id="skillsGrid4">
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Sfml.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Sfml.svg" alt="SFML">
                                 <p>SFML</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/OpenGL.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/OpenGL.svg" alt="OpenGL">
                                 <p>OpenGL</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Glsl.webp" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Glsl.webp" alt="GLSL">
                                 <p>GLSL</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/P5JS.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/P5JS.svg" alt="P5.js">
                                 <p>P5.js</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Processing.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Processing.svg" alt="Processing">
                                 <p>Processing</p>
                             </div>
                         </div>
 
                         <div class="skillsGrid" id="skillsGrid5">
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Python.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Python.svg" alt="Python">
                                 <p>Python</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/PyTorch.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/PyTorch.svg" alt="PyTorch">
                                 <p>PyTorch</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Rstudio.webp" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Rstudio.webp" alt="R">
                                 <p>R</p>
                             </div>
                         </div>
 
                         <div class="skillsGrid" id="skillsGrid6">
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Photoshop.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Photoshop.svg" alt="Photoshop">
                                 <p>Photoshop</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/DaVinci_Resolve.webp" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/DaVinci_Resolve.webp" alt="DaVinci Resolve">
                                 <p>Davinci Resolve</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Fusion360.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Fusion360.svg" alt="Fusion 360">
                                 <p>Fusion360</p>
                             </div>
                         </div>
 
                         <div class="skillsGrid" id="skillsGrid7">
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Unity.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Unity.svg" alt="Unity">
                                 <p>Unity</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Arduino.webp" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Arduino.webp" alt="Arduino">
                                 <p>Arduino</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Raspberry.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Raspberry.svg" alt="Raspberry Pi">
                                 <p>Raspberry</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Git.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Git.svg" alt="Git">
                                 <p>Git</p>
                             </div>
                             <div class="skillElement">
-                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Unix.svg" alt="C++">
+                                <img class="imgSkill" loading="lazy" decoding="async" src="img/ico/Unix.svg" alt="Unix">
                                 <p>Unix</p>
                             </div>
                         </div>
@@ -427,47 +402,43 @@
 
     </section>
 
-    <section class="sectionPage" id="Contact" style="height: 100vh;">
+    <section class="sectionPage contact-section" id="Contact">
         <div class="background">
-            <div style="position: relative;">
-                <div style="position: absolute;">
+            <div class="relative">
+                <div class="absolute">
                     <div>
-                        <canvas id="grassSimulation" style="z-index: 0; position: absolute;"></canvas>
-                        <div
-                            style="width: 100vw; height: 100vh; background: linear-gradient(180deg, rgb(94, 144, 236) 24%, rgb(52, 144, 187) 86%);">
-                        </div>
+                        <canvas class="section-canvas" id="grassSimulation"></canvas>
+                        <div class="contact-sky"></div>
                     </div>
                 </div>
             </div>
         </div>
         <div>
-            <svg class="svg-curve" viewBox="0 0 1440 40" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+            <svg class="svg-curve" viewBox="0 0 1440 40" xmlns="http://www.w3.org/2000/svg">
                 <path class="color1" d="m1 0s305 35 789 37c486-10 633-29 798-37v0h-1589z">
                 </path>
             </svg>
         </div>
-        <div
-            style="flex-direction: column; justify-content: space-evenly;  text-align: center; scroll-snap-align: start;">
-            <div style="display: flex; justify-content: center; flex-direction: column; height: 100vh;">
-                <h3 id="Howtocontactme"
-                    style="margin-bottom: 40px; font-size: 4em;">How to
+        <div class="contact-content">
+            <div class="contact-inner">
+                <h3 id="Howtocontactme" class="section-title">How to
                     contact me ?</h3>
-                <div style="display: flex; flex-direction: row; justify-content: center;">
-                    <a href="https://github.com/prof-redstone" target="_blank">
+                <div class="contact-links">
+                    <a href="https://github.com/prof-redstone" target="_blank" rel="noopener">
                         <div id="BGgit" class="BGcontacts">
-                            <img src="img/ico/GitHub.svg" alt="github link">
-                            <p style="white-space: nowrap;">prof-redstone</p>
+                            <img src="img/ico/GitHub.svg" alt="GitHub profile">
+                            <p class="contact-label">prof-redstone</p>
                         </div>
                     </a>
-                    <a href="https://www.linkedin.com/in/tom-demagny/" target="_blank">
+                    <a href="https://www.linkedin.com/in/tom-demagny/" target="_blank" rel="noopener">
                         <div id="BGlinkedin" class="BGcontacts">
-                            <img src="img/ico/Linkedin.svg" alt="mail adresse">
-                            <p style="white-space: nowrap;">in/tom-demagny</p>
+                            <img src="img/ico/Linkedin.svg" alt="LinkedIn profile">
+                            <p class="contact-label">in/tom-demagny</p>
                         </div>
                     </a>
-                    <a href="mailto: tom.demagny@gmail.com" target="_blank">
+                    <a href="mailto:tom.demagny@gmail.com">
                         <div id="BGmail" class="BGcontacts">
-                            <img src="img/ico/Mail.svg" alt="mail adresse">
+                            <img src="img/ico/Mail.svg" alt="Email address">
                             <p>tom.demagny@gmail.com</p>
                         </div>
                     </a>
@@ -475,18 +446,18 @@
             </div>
         </div>
     </section>
+    <script src="JS/AutoType.js"></script>
+    <script src="JS/section1.js"></script>
+    <script src="canvasScript/neuronWeb.js"></script>
+    <script src="canvasScript/tiling.js"></script>
+    <script src="canvasScript/grassSimulation.js"></script>
+    <script src="JS/cards.js"></script>
+    <script src="JS/section2.js"></script>
+    <script src="JS/section3.js"></script>
+    <script src="JS/section4.js"></script>
+    <script src="JS/section5.js"></script>
+    <script src="JS/contacts.js"></script>
+    <script src="JS/coordinateur.js"></script>
 </body>
-<script src="JS/AutoType.js"></script>
-<script src="JS/section1.js"></script>
-<script src="canvasScript/neuronWeb.js"></script>
-<script src="canvasScript/tiling.js"></script>
-<script src="canvasScript/grassSimulation.js"></script>
-<script src="JS/cards.js"></script>
-<script src="JS/section2.js"></script>
-<script src="JS/section3.js"></script>
-<script src="JS/section4.js"></script>
-<script src="JS/section5.js"></script>
-<script src="JS/contacts.js"></script>
-<script src="JS/coordinateur.js"></script>
 
 </html>

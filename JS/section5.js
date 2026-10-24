@@ -12,6 +12,8 @@ function StartSection5() {
     if (!MySkillsWritten) {
         MySkillsWritten = true;
         MySkills.Start()
+    } else {
+        MySkills.Resume()
     }
 }
 

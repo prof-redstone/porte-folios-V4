@@ -189,12 +189,10 @@ function grassSimulation() {
     }
 
     this.StopGrassSimulation = function() {
-        console.log("Stop GrassSimulation canvas")
         clearInterval(Interval)
     }
 
     this.StartGrassSimulation = function() {
-        console.log("Start GrassSimulation canvas")
         clearInterval(Interval)
         Interval = setInterval(() => {
             loop()

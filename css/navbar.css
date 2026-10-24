@@ -6,12 +6,10 @@
     color: white;
     display: flex;
     align-items: center;
-    transition: transform 0.3s ease;
-    z-index: 1000;
-    display: flex;
     justify-content: space-between;
     padding-right: 10vw;
     position: fixed;
+    z-index: 1000;
     transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
@@ -20,9 +18,9 @@
 }
 
 #navbar.blur {
-    backdrop-filter: blur(5px); /* Applique le flou */
-    -webkit-backdrop-filter: blur(0px); /* Compatibilité Safari */
-    background-color: #4154693b; 
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background-color: #4154693b;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -31,6 +29,14 @@
     padding-left: 40px;
     display: flex;
     align-items: flex-end;
+}
+
+#navbar > .navbar-brand {
+    align-items: center;
+}
+
+.navbar-logo {
+    width: 40px;
 }
 
 #navbar > div > a{

@@ -37,6 +37,13 @@ class AutoType {
         this.SetIntervalTime(0)
     }
 
+    Resume() {
+        if (this.start || this.actionNumber >= this.action.length) return this
+        this.start = true
+        this.SetIntervalTime(this.writeSpeed)
+        return this
+    }
+
     SetIntervalTime(a) {
         if (a != this.actuUpdateSpeed) {
             clearInterval(this.intervalTime)

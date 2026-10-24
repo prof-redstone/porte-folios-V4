@@ -80,52 +80,52 @@ var archivedCardsCollection = [
 var imagesCards1 = [{
     source: "img/fractal/0.webp",
     title: "Polygonal fractal",
-    action: "/ext/polygoneFractal/index.html"
+    action: "ext/polygoneFractal/index.html"
   },
   {
     source: "img/fractal/1.webp",
     title: "Angle flower",
-    action: "/ext/AngleFlower/index.html"
+    action: "ext/AngleFlower/index.html"
   },
   {
     source: "img/fractal/2.webp",
     title: "Chaos fractal",
-    action: "/ext/ChaosFractal/index.html"
+    action: "ext/ChaosFractal/index.html"
   },
   {
     source: "img/fractal/3.webp",
     title: "Dragon curve",
-    action: "/ext/DragonCurve/index.html"
+    action: "ext/DragonCurve/index.html"
   },
   {
     source: "img/fractal/4.webp",
     title: "Chaos fractal II",
-    action: "/ext/ChaosFractal2/index.html"
+    action: "ext/ChaosFractal2/index.html"
   },
   {
     source: "img/fractal/5.webp",
     title: "3D raymarching",
-    action: "/ext/FractalRaymarching/index.html"
+    action: "ext/FractalRaymarching/index.html"
   },
   {
     source: "img/fractal/6.webp",
     title: "Fractal tree",
-    action: "/ext/fractal_tree/index.html"
+    action: "ext/fractal_tree/index.html"
   },
   {
     source: "img/fractal/7.webp",
     title: "Fractal generator",
-    action: "/ext/fractalGen/index.html"
+    action: "ext/fractalGen/index.html"
   },
   {
     source: "img/fractal/8.webp",
     title: "Newton fractal",
-    action: "/ext/NewtonFractal/index.html"
+    action: "ext/NewtonFractal/index.html"
   },
   {
     source: "img/fractal/9.webp",
     title: "Lorenz attractor",
-    action: "/ext/LorenzAttractor/index.html"
+    action: "ext/LorenzAttractor/index.html"
   },
 ]
 

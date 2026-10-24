@@ -153,6 +153,7 @@ function generateCards() {
             media = document.createElement('a');
             media.href = project.action;
             media.target = '_blank';
+            media.rel = 'noopener';
         }else{
             media = document.createElement('div');
         }
@@ -160,8 +161,7 @@ function generateCards() {
 
         if (project.video) {
             let videoContainer = document.createElement('div');
-            videoContainer.style.position = 'relative';
-            videoContainer.style.width = '100%';
+            videoContainer.classList.add('video-container');
 
             let fallbackImage = document.createElement('img');
             fallbackImage.src = project.image;
@@ -179,17 +179,11 @@ function generateCards() {
             video.preload = "none";
             video.dataset.src = project.video;
             video.setAttribute('aria-label', project.title);
-            video.classList.add("media-card");
-            video.style.position = 'absolute';
-            video.style.inset = '0';
-            video.style.width = '100%';
-            video.style.height = '100%';
-            video.style.objectFit = 'cover';
-            video.style.opacity = "0";
+            video.classList.add("media-card", "project-video");
 
             video.addEventListener('playing', () => {
                 fallbackImage.style.visibility = 'hidden';
-                video.style.opacity = "1";
+                video.classList.add("project-video--playing");
             });
 
             video.addEventListener('error', () => {
@@ -220,6 +214,7 @@ function generateCards() {
             titleAction = document.createElement('a');
             titleAction.href = project.action;
             titleAction.target = '_blank';
+            titleAction.rel = 'noopener';
         }else{
             titleAction = document.createElement('div');
         }
@@ -252,6 +247,7 @@ function generateCards() {
             const button = document.createElement('a');
             button.href = project.code;
             button.target = '_blank';
+            button.rel = 'noopener';
             button.classList.add("button-card-code")
             button.innerHTML = `<svg style="width: 21px; fill: none; stroke-width: 1.9px; stroke-linecap: round; stroke-linejoin: round; opacity: 1;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.05 20.31"><g><path d="M7.26 16.34c-4.11 1.23-4.11-2.06-5.76-2.47M13 18.81V15.62a2.78 2.78 0 0 0-.77-2.15c2.59-.28 5.3-1.26 5.3-5.76a4.46 4.46 0 0 0-1.23-3.08 4.18 4.18 0 0 0-.08-3.11s-1-.29-3.22 1.22a11 11 0 0 0-5.76 0C5 1.23 4 1.52 4 1.52A4.18 4.18 0 0 0 4 4.63 4.48 4.48 0 0 0 2.73 7.74c0 4.46 2.72 5.44 5.31 5.76a2.8 2.8 0 0 0-.78 2.12v3.19"></path></g></svg>`;
 
@@ -261,6 +257,7 @@ function generateCards() {
             const button = document.createElement('a');
             button.href = project.run;
             button.target = '_blank';
+            button.rel = 'noopener';
             button.classList.add("button-card-run")
             button.innerHTML = `<svg style="width: 21px; fill: none; stroke-width: 1.9px; stroke-linecap: round; stroke-linejoin: round; opacity: 1;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.09 18.64"><g><path d="M14.55 7.52 4.62 1.78A2.08 2.08 0 0 0 1.5 3.58V15.05a2.08 2.08 0 0 0 3.12 1.8l9.93-5.73A2.08 2.08 0 0 0 14.55 7.52Z"></path></g></svg>`; 
 
@@ -268,17 +265,11 @@ function generateCards() {
         }    
 
         const date = document.createElement('p');
-        date.style.marginRight = "10px"
-        date.style.marginLeft = "10px"
-        date.classList.add("date-card")
+        date.classList.add("date-card", "project-date")
         date.textContent = project.anne;
 
         const divBTNEtDate = document.createElement('div');
-        divBTNEtDate.style.display = "flex"
-        divBTNEtDate.style.alignItems = "center"
-        divBTNEtDate.style.marginTop = "15px"
-        divBTNEtDate.style.justifyContent = "space-between"
-        divBTNEtDate.style.width = "100%"
+        divBTNEtDate.classList.add("project-footer")
         divBTNEtDate.appendChild(boutons);
         divBTNEtDate.appendChild(date);
 

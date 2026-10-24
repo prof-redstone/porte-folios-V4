@@ -73,6 +73,7 @@ window.addEventListener('resize', function() {
     } else if (banner) {
         banner.remove();
     }
+    addVerticalStylesheet();
 });
 
 function addVerticalStylesheet() {
@@ -110,9 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
     sections.forEach(section => observer.observe(section));
 
     function activateSectionScripts(sectionId) {
-        
-        console.log(`Activation des scripts pour ${sectionId}`);
-
         if(sectionId == "Home"){StartSection1()}
         if(sectionId == "AboutMe"){StartSection2()}
         if(sectionId == "Projects"){StartSection3()}
@@ -122,8 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function deactivateSectionScripts(sectionId) {
-        console.log(`Désactivation des scripts pour ${sectionId}`);
-        
         if(sectionId == "Home"){StopSection1()}
         if(sectionId == "AboutMe"){StopSection2()}
         if(sectionId == "Projects"){StopSection3()}
