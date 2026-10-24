@@ -22,6 +22,121 @@ function StopSection3(){
 
 
 
+const videosInOrder = [];
+let pageReady = false;
+let preloadIndex = 0;
+let preloadScheduled = null;
+let preloading = false;
+
+function loadVideo(video) {
+    if (video.src || video.dataset.loading === "1") return;
+    video.dataset.loading = "1";
+    video.preload = "auto";
+    video.src = video.dataset.src;
+    video.load();
+}
+
+function playVideo(video) {
+    loadVideo(video);
+    const promise = video.play();
+    if (promise) promise.catch(() => {});
+}
+
+// Joue uniquement la vidéo visible, met les autres en pause.
+const videoVisibility = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        const video = entry.target;
+        if (entry.isIntersecting) {
+            video.dataset.visible = "1";
+            playVideo(video);
+        } else {
+            video.dataset.visible = "0";
+            video.pause();
+        }
+    });
+}, { threshold: 0.5 });
+
+document.addEventListener('visibilitychange', () => {
+    document.querySelectorAll('#project-cards-container video').forEach(video => {
+        if (document.hidden) {
+            video.pause();
+        } else if (video.dataset.visible === "1" && video.src) {
+            video.play().catch(() => {});
+        }
+    });
+});
+
+function backgroundPreloadAllowed() {
+    if (window.matchMedia && window.matchMedia('(max-width: 900px)').matches) return false;
+    const connection = navigator.connection;
+    if (connection && (connection.saveData || /(^|-)2g$/.test(connection.effectiveType || ''))) return false;
+    return true;
+}
+
+function schedulePreload(delay) {
+    if (preloadScheduled) return;
+    preloadScheduled = setTimeout(() => {
+        preloadScheduled = null;
+        backgroundPreloadNext();
+    }, delay);
+}
+
+// Charge les vidéos en arrière-plan, dans l'ordre d'affichage, après le reste de la page.
+function backgroundPreloadNext() {
+    if (!pageReady || preloading || !backgroundPreloadAllowed()) return;
+    if (preloadIndex >= videosInOrder.length) return;
+
+    const visibleStillBuffering = videosInOrder.some(video =>
+        video.dataset.visible === "1" && video.readyState < 3
+    );
+    if (visibleStillBuffering) {
+        schedulePreload(600);
+        return;
+    }
+
+    const video = videosInOrder[preloadIndex];
+    if (video.src || video.dataset.loading === "1") {
+        preloadIndex++;
+        schedulePreload(0);
+        return;
+    }
+
+    preloading = true;
+    loadVideo(video);
+
+    let finished = false;
+    let safety;
+    const next = () => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(safety);
+        video.removeEventListener('canplaythrough', next);
+        video.removeEventListener('loadeddata', next);
+        video.removeEventListener('error', next);
+        preloading = false;
+        preloadIndex++;
+        schedulePreload(250);
+    };
+
+    video.addEventListener('canplaythrough', next);
+    video.addEventListener('loadeddata', next);
+    video.addEventListener('error', next);
+    safety = setTimeout(next, 20000);
+}
+
+function startBackgroundPreload() {
+    pageReady = true;
+    if (!backgroundPreloadAllowed()) return;
+    const idle = window.requestIdleCallback || (callback => setTimeout(callback, 300));
+    idle(() => schedulePreload(0), { timeout: 2000 });
+}
+
+if (document.readyState === 'complete') {
+    startBackgroundPreload();
+} else {
+    window.addEventListener('load', startBackgroundPreload, { once: true });
+}
+
 function generateCards() {
     const container = document.getElementById('project-cards-container');
     let evenNumber = 0
@@ -47,42 +162,47 @@ function generateCards() {
             let videoContainer = document.createElement('div');
             videoContainer.style.position = 'relative';
             videoContainer.style.width = '100%';
-            videoContainer.style.height = '100%';
-        
-            let video = document.createElement('video');
-            video.loop = true;
-            video.muted = true; 
-            video.autoplay = true;
-            video.preload = "auto";
-            video.classList.add("media-card");
-            video.style.position = 'absolute';
-            video.style.opacity = "0";
-        
-            const source = document.createElement('source');
-            source.src = project.video;
-            source.type = "video/mp4";
-            video.appendChild(source);
-        
+
             let fallbackImage = document.createElement('img');
             fallbackImage.src = project.image;
             fallbackImage.alt = project.title;
+            fallbackImage.width = 800;
+            fallbackImage.height = 450;
+            fallbackImage.loading = 'lazy';
+            fallbackImage.decoding = 'async';
             fallbackImage.classList.add("media-card");
 
-            video.addEventListener('canplaythrough', () => {
-                console.log('Video loaded successfully');
-                video.style.position = "relative"
-                fallbackImage.style.display = 'none'; 
+            let video = document.createElement('video');
+            video.loop = true;
+            video.muted = true;
+            video.playsInline = true;
+            video.preload = "none";
+            video.dataset.src = project.video;
+            video.setAttribute('aria-label', project.title);
+            video.classList.add("media-card");
+            video.style.position = 'absolute';
+            video.style.inset = '0';
+            video.style.width = '100%';
+            video.style.height = '100%';
+            video.style.objectFit = 'cover';
+            video.style.opacity = "0";
+
+            video.addEventListener('playing', () => {
+                fallbackImage.style.visibility = 'hidden';
                 video.style.opacity = "1";
             });
-        
+
             video.addEventListener('error', () => {
-                console.error('Video failed to load');
-                video.style.display = 'none'; 
+                video.style.display = 'none';
+                fallbackImage.style.visibility = 'visible';
             });
-        
+
             videoContainer.appendChild(fallbackImage);
             videoContainer.appendChild(video);
             media.appendChild(videoContainer);
+
+            videosInOrder.push(video);
+            videoVisibility.observe(video);
         }
 
         if (evenNumber % 2 == 1) {//pourchanger l'ordre

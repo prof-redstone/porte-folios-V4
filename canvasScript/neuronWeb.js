@@ -2,8 +2,8 @@ function NeuronWeb() {
     let canvasNeuronWeb = document.getElementById("neuronWeb")
     let ctxNeuronWeb = canvasNeuronWeb.getContext("2d")
 
-    let activeLoop = true;
-    let fps = 30;
+    let activeLoop = false;
+    let rafId = null;
     let lastUpdate = Date.now();
     let deltaTime;
 
@@ -36,11 +36,11 @@ function NeuronWeb() {
             canvasNeuronWeb.height = innerHeight;
             canvasNeuronWeb.width = innerWidth;
         });
-        neuronWebLoop()
     }
     neuronWebSetup()
 
     function neuronWebLoop() {
+        if (!activeLoop) return;
 
         deltaTime = UpdateDelteTime()
 
@@ -94,12 +94,7 @@ function NeuronWeb() {
             collectionOfOrbs[i].move();
         }
 
-        if (activeLoop) {
-
-            setTimeout(function() {
-                neuronWebLoop()
-            }, 1000 / fps);
-        }
+        rafId = requestAnimationFrame(neuronWebLoop);
     }
 
     function neuronWebOrbs() {
@@ -140,14 +135,16 @@ function NeuronWeb() {
     }
 
     this.StopNeuronWeb = function() {
-        console.log("Stop NeuronWeb canvas")
         activeLoop = false
+        if (rafId !== null) cancelAnimationFrame(rafId)
+        rafId = null
     }
 
     this.StartNeuroneWeb = function() {
-        console.log("Start NeuronWeb canvas")
+        if (activeLoop) return
         activeLoop = true
-        requestAnimationFrame(neuronWebLoop)
+        lastUpdate = Date.now()
+        rafId = requestAnimationFrame(neuronWebLoop)
     }
 
     function UpdateDelteTime() {

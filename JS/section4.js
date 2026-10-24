@@ -46,10 +46,13 @@ class Carousel {
         track.style.setProperty("--duration", `${duration}ms`);
     }
 
-    buildItem({ source, action }) {
+    buildItem({ source, title, action }) {
         const link = document.createElement("a");
+        link.className = "carrousel-link";
         link.href = action;
         link.target = "_blank";
+        link.rel = "noopener";
+        link.setAttribute("aria-label", title ? `${title} — open experiment` : "Open experiment");
 
         const hold = document.createElement("div");
         hold.className = "holdImg-carrousel";
@@ -57,9 +60,19 @@ class Carousel {
         const img = document.createElement("img");
         img.className = "img-carrousel";
         img.src = source;
-        img.alt = "project preview";
+        img.alt = title || "project preview";
+        img.width = 200;
+        img.height = 200;
+        img.loading = "lazy";
+        img.decoding = "async";
+
+        const name = document.createElement("span");
+        name.className = "carrousel-name";
+        name.textContent = title || "";
+        name.setAttribute("aria-hidden", "true");
 
         hold.appendChild(img);
+        hold.appendChild(name);
         link.appendChild(hold);
         return link;
     }

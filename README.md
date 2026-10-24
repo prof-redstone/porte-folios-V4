@@ -62,9 +62,10 @@ porte-folios-V4/
 └── img/                # icônes, photos, vignettes et vidéos de projets
 ```
 
-- **Vanilla JS** + [jQuery](https://jquery.com) (CDN)
+- **Vanilla JS**, sans dépendance
 - Typographie [Poppins](https://fonts.google.com/specimen/Poppins) (Google Fonts)
 - Animations `<canvas>` écrites à la main
+- Images en WebP ; vidéos préchargées en arrière-plan après la page sur desktop, jouées uniquement à l'écran (chargement à la demande sur mobile ou connexion lente)
 
 ---
 

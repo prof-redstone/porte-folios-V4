@@ -11,7 +11,9 @@ let intervalAnimLetter
 blinkState = 1;
 blinker = setInterval(() => {
     blinkState = (blinkState == 1) ? 0 : 1
-    $(".cursorBlinker").css("opacity", blinkState)
+    document.querySelectorAll(".cursorBlinker").forEach(el => {
+        el.style.opacity = blinkState
+    })
 }, 700)
 
 //animation auto type
@@ -70,13 +72,18 @@ autoTypewebDeveloper2 = new AutoType({
     className: ["rotHover", "rotEvent", "colorRed"]
 }).Sleep(600).Write("developer").Start()
 
-//animation hover des lettres
-$(".rotHover").bind("webkitAnimationEnd mozAnimationEnd animationEnd", function() {
-    $(this).removeClass("rotationAnimation")
-})
-$(".rotHover").hover(function() {
-    $(this).addClass("rotationAnimation");
-})
+//animation hover des lettres (délégation : fonctionne aussi sur les lettres ajoutées ensuite)
+document.addEventListener("mouseover", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const letter = event.target.closest(".rotHover");
+    if (!letter || letter === event.relatedTarget || letter.contains(event.relatedTarget)) return;
+    letter.classList.add("rotationAnimation");
+});
+document.addEventListener("animationend", (event) => {
+    if (event.target instanceof Element && event.target.classList.contains("rotationAnimation")) {
+        event.target.classList.remove("rotationAnimation");
+    }
+});
 //characters random qui toune tous les 4s
 intervalAnimLetter = setInterval(() => {
     var el = document.getElementsByClassName('rotEvent');

@@ -2,7 +2,7 @@ class AutoType {
     constructor(param) {
         this.location = param.parent || "";
         this.state = param.state || "";
-        this.typeElement = this.typeElement || "span";
+        this.typeElement = param.typeElement || "span";
         this.ClassArray = param.className || ["autoType"];
         this.loop = param.loop || false;
         this.writeSpeed = param.writeSpeed || 50;
@@ -163,15 +163,6 @@ class AutoType {
         }
         p.innerHTML = char
         this.location.append(p)
-
-        //add for this page
-        $(".rotHover").bind("webkitAnimationEnd mozAnimationEnd animationEnd", function() {
-            $(this).removeClass("rotationAnimation")
-        })
-        
-        $(".rotHover").hover(function() {
-            $(this).addClass("rotationAnimation");
-        })
     }
     ClearChar(){ //methode
         while(this.location.firstChild){

@@ -31,6 +31,10 @@
     filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.5));
 }
 
+img.media-card {
+    height: auto;
+}
+
 .media-card:hover,
 .text-card:hover {    
     filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.7));
