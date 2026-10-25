@@ -106,6 +106,12 @@ h3{
     position: relative;
 }
 
+
+.break-link {
+    overflow-wrap: anywhere;
+}
+
+
 .underline-blue::after {
     content: '';
     position: absolute;

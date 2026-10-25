@@ -43,14 +43,15 @@ var cardsCollection = [
     anne: "2022"
   },
   {
-    title: "Fractals generator",
-    description: "A program for visualizing and navigating Mandelbrot fractals, the Julia set, and the Burning Ship. The program is written in C++ using SFML, with customizable colors and rendering parameters.",
-    langage: ["C++", "SFML"],
-    video: "img/videoProject/PresFractalC++.mp4",
-    image: "img/imageProject/PresFractalC++.webp",
-    code: "https://github.com/prof-redstone/fractals-generator",
-    action: "https://github.com/prof-redstone/fractals-generator",
-    anne: "2021"
+    title: "Mandelbrot 6D",
+    description: "An immersive fractal experience, extending the Mandelbrot set to complex exponents with a 6D camera. You can explore the fractal freely, rotate in real time between Mandelbrot and Julia planes. Watch the visuals evolve with the geometry and a reactive soundtrack. A scripted guided journey introduces the mathematics step by step, making the experience accessible to anyone.  Built with p5.js and custom GLSL shaders.",
+    langage: ["p5.js", "GLSL"],
+    video: "img/videoProject/MandelBrotGPU.mp4",
+    image: "img/imageProject/MandelBrotGPU.webp",
+    code: "https://github.com/prof-redstone/porte-folios-V4/tree/master/ext/MandelbrotGPU",
+    action: "ext/MandelbrotGPU/index.html",
+    run: "ext/MandelbrotGPU/index.html",
+    anne: "2025"
   },
 ];
 

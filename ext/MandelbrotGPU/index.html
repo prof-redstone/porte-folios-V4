@@ -138,8 +138,15 @@
 
     <script>
         function startAnimation() {
-            document.getElementById('warning-overlay').classList.add('hidden');            
-            NextPosition();
+            if (typeof appReady !== 'undefined' && appReady) {
+                document.getElementById('warning-overlay').classList.add('hidden');
+                NextPosition();
+            } else {
+                startPending = true;
+                const btn = document.getElementById('start-button');
+                btn.textContent = 'Loading...';
+                btn.disabled = true;
+            }
         }
 
         function checkHardwareAcceleration() {

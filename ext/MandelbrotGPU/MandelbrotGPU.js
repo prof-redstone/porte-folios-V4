@@ -6,6 +6,9 @@ let maskBuffer;
 let frameCount = 0;
 var percentageOfNonDivergence = 0;
 
+let appReady = false;      // vrai quand setup() est terminé
+let startPending = false;  // l'utilisateur a demandé à démarrer mais setup() n'était pas prêt
+
 let zoom = 1;
 let centerX = 0.0;
 let centerY = 0.0;
@@ -83,6 +86,13 @@ function setup() {
 
     //sounds
     setupSound();
+
+    appReady = true;
+    if (startPending) {
+        startPending = false;
+        document.getElementById('warning-overlay').classList.add('hidden');
+        NextPosition();
+    }
 }
 
 function setupSound() {
@@ -351,6 +361,12 @@ function mouseWheel(event) {
 }
 
 function NextPosition() {
+    if (!appReady) {
+        startPending = true;
+        return;
+    }
+
+
     positionIndex = (positionIndex + 1) % posArray.length;
 
     moveQueue = [];

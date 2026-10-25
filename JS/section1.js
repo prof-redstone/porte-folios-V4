@@ -67,6 +67,9 @@ autoTypewebDeveloper1 = new AutoType({
 .Write("C++")
 .Sleep(5000)
 .Delete(100)
+.Write("EVM")
+.Sleep(5000)
+.Delete(100)
 .Start()
 //espace insécable :   
 autoTypewebDeveloper2 = new AutoType({
