@@ -23,25 +23,50 @@ canvas.height = size[1]
 
 var interval = setInterval(draw, 200)
 
+var dirty = [];
+var fullDraw = true;
+
 function draw(){
-
     update()
-
-    show()    
+    show()
 }
 
 function show(){
-    let size = gride.SizeGride()
-    ctx.fillStyle = "#AAA";
-    ctx.fillRect(0,0,size[0], size[1]);
-    ctx.fillStyle = "#FF0000";
-    for (let i = 0; i < gride.width; i++) {
-        for (let j = 0; j < gride.height; j++) {
+    if (fullDraw || dirty.length === 0) {
+        let size = gride.SizeGride()
+        ctx.fillStyle = "#363946";
+        ctx.fillRect(0,0,size[0], size[1]);
+        ctx.strokeStyle = "#2a2c36";
+        ctx.lineWidth = 1;
+        for (let i = 0; i < gride.width; i++) {
+            for (let j = 0; j < gride.height; j++) {
+                let pos = gride.GetXYCoordinate(i,j)
+                gride.PathDrawHex(pos[0], pos[1], ctx);
+                if (gride.gride[j][i] == 1) {
+                    ctx.fillStyle = "#58A4B0";
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = "#363946";
+                    ctx.fill();
+                }
+                ctx.stroke();
+            }
+        }
+        fullDraw = false;
+    } else {
+        ctx.strokeStyle = "#2a2c36";
+        ctx.lineWidth = 1;
+        for (let k = 0; k < dirty.length; k++) {
+            let i = dirty[k][0];
+            let j = dirty[k][1];
             let pos = gride.GetXYCoordinate(i,j)
             gride.PathDrawHex(pos[0], pos[1], ctx);
             if (gride.gride[j][i] == 1) {
-                ctx.fillStyle = "#222"
-                ctx.fill()
+                ctx.fillStyle = "#58A4B0";
+                ctx.fill();
+            } else {
+                ctx.fillStyle = "#363946";
+                ctx.fill();
             }
             ctx.stroke();
         }
@@ -59,6 +84,7 @@ function initGride(){
 }
 
 function update(){
+    dirty = [];
     for(var i = 0; i < gride.height; i++){
         for(var j = 0; j < gride.width; j++){
             grideCopie.gride[i][j] = gride.gride[i][j];
@@ -67,17 +93,18 @@ function update(){
 
     for(var i = 0; i < gride.height; i++){
         for(var j = 0; j < gride.width; j++){
-            
+
             let voisins = grideCopie.GetNeighbourCoordinate(j,i)
             let nbV = 0
-            for (let i = 0; i < voisins.length; i++) {
-                if (voisins[i][0] != undefined || voisins[i][1] != undefined) {
-                    if (grideCopie.gride[voisins[i][1]][voisins[i][0]] == 1) {
+            for (let k = 0; k < voisins.length; k++) {
+                if (voisins[k][0] != undefined || voisins[k][1] != undefined) {
+                    if (grideCopie.gride[voisins[k][1]][voisins[k][0]] == 1) {
                         nbV++
                     }
                 }
             }
 
+            let newVal = gride.gride[i][j];
             if(grideCopie.gride[i][j] == 1){
                 if(!(nbV == 3)){
                     gride.gride[i][j] = 0;
@@ -87,7 +114,9 @@ function update(){
                     gride.gride[i][j] = 1;
                 }
             }
-
+            if (gride.gride[i][j] !== newVal) {
+                dirty.push([j, i]);
+            }
         }
     }
 }
@@ -100,6 +129,8 @@ function ChangeFrameRate(val){
 }
 
 function ChangeSize(long=100, larg=100, size = 5){
+    fullDraw = true;
+    dirty = [];
     gride = new HexagonalGride(parseInt(long),parseInt(larg));
     gride.hexRadius = parseInt(size);
     gride.ligneDirection = 0;

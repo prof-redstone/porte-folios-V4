@@ -127,6 +127,11 @@ var imagesCards1 = [{
     title: "Lorenz attractor",
     action: "ext/LorenzAttractor/index.html"
   },
+  {
+    source: "img/fractal/10.webp",
+    title: "Mandelbrot GPU",
+    action: "ext/MandelbrotGPU/index.html"
+  }
 ]
 
 var imagesCards2 = [{
@@ -222,19 +227,9 @@ var imagesCards3 = [{
   action: "ext/matrixFullScreen/index.html"
 },
 {
-  source: "img/simulation/10.webp",
-  title: "Flower",
-  action: "ext/flower/index.html"
-},
-{
   source: "img/simulation/11.webp",
   title: "Fluid simulation",
   action: "ext/FluidSimulation/index.html"
-},
-{
-  source: "img/simulation/12.webp",
-  title: "DVD animation",
-  action: "ext/DVDanimation/index.html"
 },
 {
   source: "img/simulation/13.webp",
@@ -251,4 +246,14 @@ var imagesCards3 = [{
   title: "AI cars neuroevolution",
   action: "ext/IAcarsNeuroevolution/index.html"
 },
+{
+  source: "img/simulation/16.webp",
+  title: "Hexagonal Game of Life",
+  action: "ext/hexGOL/index.html"
+},
+{
+  source: "img/simulation/17.webp",
+  title: "Wave simulation",
+  action: "ext/WaveSimulation/index.html"
+}
 ]

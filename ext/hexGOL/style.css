@@ -1,33 +1,102 @@
-body{
-    background-color: rgb(30, 30, 30);
-    margin: 0;
+* {
+  box-sizing: border-box;
 }
 
-p{
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-weight: 600;
-    line-height: 0%;
-    margin-right: 5px;
+body {
+  margin: 0;
+  background-color: #000000;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
-.param{
-    display: inline-flex;
-    margin-left: 20px;
+.canvas-container {
+  display: inline-block;
+  background: #111;
+  border-radius: 8px;
+  padding: 10px;
 }
 
-button{
-    padding: 0,5;
-    margin-left: 4px;
-    background: transparent;
-    border-color: black;
-    border-radius: 4px;
-    transition-duration: 0.1s;
+.canvas {
+  display: block;
+  outline: none;
 }
 
-button:hover{
-    background: rgb(196, 196, 196);
+.controls {
+  margin-top: 20px;
+  padding: 15px;
+  background: #e8e8e8;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.canvas{
-    height: calc(100vh - 10%);
+.param {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.param p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #555;
+  white-space: nowrap;
+}
+
+input[type="range"] {
+  width: 100px;
+  height: 6px;
+  border-radius: 3px;
+  background: #d0d0d0;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="text"] {
+  width: 60px;
+  padding: 5px 8px;
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  color: #333;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+button {
+  padding: 6px 12px;
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  color: #333;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: #d0d0d0;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .param {
+    justify-content: space-between;
+  }
+  input[type="range"] {
+    width: 100%;
+  }
 }
