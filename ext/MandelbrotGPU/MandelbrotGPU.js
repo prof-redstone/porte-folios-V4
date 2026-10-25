@@ -460,6 +460,109 @@ function updateMousePosition() {
 }
 
 
+// --- BEGIN ADAPTIVE ---------------------------------------------------------
+// Résolution adaptative : on mesure le framerate pendant les mouvements et on ajuste
+// pixelDensity pour rester au dessus de FPS_MIN. Quand l'image ne bouge plus, on repasse
+// en pleine définition ; quand ça rebouge, on repart de la dernière densité qui marchait.
+const FPS_MIN = 24;          // en dessous : on baisse la définition
+const FPS_TARGET = 30;       // fps visé quand on baisse
+const FPS_COMFORT = 40;      // au dessus : on a de la marge, on peut remonter
+const DENSITY_MIN = 0.25;    // jamais plus flou que ça
+const DENSITY_STEP = 0.05;   // la densité est arrondie à ce pas (évite les micro-redimensionnements)
+const IDLE_DENSITY = 1;      // définition quand l'image est immobile
+const IDLE_FRAMES = 6;       // frames sans changement avant de passer en IDLE_DENSITY
+const ADAPT_FRAMES = 8;      // nb de frames en mouvement mesurées avant chaque décision
+const SKIP_AFTER_RESIZE = 2; // frames ignorées après un changement de densité (réallocation = frame lente)
+const CEIL_MS = 4000;        // après une remontée ratée, durée pendant laquelle on ne retente pas (double à chaque échec)
+const CEIL_MAX_MS = 32000;
+const PERF_DEBUG = false;    // true : affiche les changements de densité dans la console
+
+let curDensity = 1;          // densité appliquée au canvas
+let motionDensity = 1;       // dernière densité choisie pendant un mouvement
+let lastState = null;        // état de la dernière image dessinée
+let stillFrames = 0;
+let perfN = 0, perfT = 0, perfSkip = 0;
+let lastAdaptWasUp = false, densityBeforeUp = 1, densityCeil = 1, ceilUntil = 0, ceilMs = CEIL_MS;
+
+function quantDensity(d) {
+    d = Math.round(d / DENSITY_STEP) * DENSITY_STEP;
+    d = Math.min(1, Math.max(DENSITY_MIN, d));
+    return Math.round(d * 1000) / 1000;
+}
+
+// applique une densité (arrondie) ; renvoie true si elle a changé
+function applyDensity(d) {
+    d = quantDensity(d);
+    if (Math.abs(d - curDensity) < 1e-6) return false;
+    curDensity = d;
+    pixelDensity(d);
+    perfN = 0; perfT = 0; perfSkip = SKIP_AFTER_RESIZE;
+    if (PERF_DEBUG) console.log("pixelDensity ->", d);
+    return true;
+}
+
+// appelée à chaque frame où l'image a changé : mesure le fps et ajuste la densité
+function adaptDensity() {
+    if (perfSkip > 0) { perfSkip--; return; }
+    if (deltaTime > 500) return;                 // onglet en arrière-plan, gros hoquet... mesure non fiable
+    perfN++; perfT += deltaTime;
+    if (perfN < ADAPT_FRAMES) return;
+
+    const fps = 1000 * perfN / perfT;
+    perfN = 0; perfT = 0;
+    const now = millis();
+
+    // 1) trop lent : on baisse
+    if (fps < FPS_MIN) {
+        if (curDensity <= DENSITY_MIN) { lastAdaptWasUp = false; return; }
+        let target;
+        if (lastAdaptWasUp) {
+            // on venait de remonter et ça ne tient pas : retour direct, et on attend de plus en plus longtemps avant de réessayer
+            target = densityBeforeUp;
+            densityCeil = densityBeforeUp;
+            ceilUntil = now + ceilMs;
+            ceilMs = Math.min(ceilMs * 2, CEIL_MAX_MS);
+        } else {
+            // le coût est ~ proportionnel au nombre de pixels (densité²)
+            target = curDensity * Math.sqrt(fps / FPS_TARGET);
+            if (quantDensity(target) >= curDensity) target = curDensity - DENSITY_STEP; // au moins un cran
+        }
+        lastAdaptWasUp = false;
+        if (applyDensity(target)) motionDensity = curDensity;
+        return;
+    }
+
+    // 2) assez rapide : la remontée précédente (si elle existe) a tenu
+    if (lastAdaptWasUp) { lastAdaptWasUp = false; ceilMs = CEIL_MS; }
+
+    // 3) peut-on remonter ?
+    const ceil = now < ceilUntil ? densityCeil : 1;
+    if (curDensity >= ceil) return;
+    if (fps <= FPS_COMFORT) return;                                       // zone confortable (FPS_MIN..FPS_COMFORT) : on ne touche à rien
+
+    let target = curDensity * Math.min(1.15, Math.sqrt(fps / FPS_TARGET)); // marge : on remonte doucement
+    if (quantDensity(target) <= curDensity) target = curDensity + DENSITY_STEP;
+    target = Math.min(target, ceil);
+    const before = curDensity;
+    if (applyDensity(target)) {
+        densityBeforeUp = before;
+        lastAdaptWasUp = true;
+        motionDensity = curDensity;
+    }
+}
+
+// tout ce qui influence l'image (le shader n'utilise ni time ni mouse)
+function sceneState() {
+    return [...shift, ...ax1, ...ax2, zoom, it, width, height];
+}
+
+function sameState(a, b) {
+    if (!a || !b) return false;
+    for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    return true;
+}
+// --- END ADAPTIVE -----------------------------------------------------------
+
 function draw() {    
 
     moveManager();
@@ -467,28 +570,48 @@ function draw() {
     updateMousePosition();
 
 
-    //pas de vec6 dans les shaders, on splitte en vec4 et vec2
-    myShader.setUniform('resolution', [width, height]);
-    myShader.setUniform('mouse', [centerX, centerY]);
-    myShader.setUniform('time', millis() / 1000.0);
-    myShader.setUniform('izoom', 1 / zoom);
-    myShader.setUniform('imaxIt', it);
+    // --- résolution adaptative ---
+    const state = sceneState();
+    const changed = !sameState(state, lastState);
+    lastState = state;
+    let redraw = changed;
 
-    myShader.setUniform('shift4', [shift[0], shift[1], shift[2], shift[3]]);
-    myShader.setUniform('shift2', [shift[4], shift[5]]);
+    if (changed) {
+        // l'image bouge : si on était en pleine définition à l'arrêt, on repart de la dernière densité de mouvement
+        if (stillFrames > 0) applyDensity(motionDensity);
+        stillFrames = 0;
+        adaptDensity();
+    } else {
+        stillFrames++;
+        // image immobile : on repasse en pleine définition (une seule fois)
+        if (stillFrames === IDLE_FRAMES && applyDensity(IDLE_DENSITY)) redraw = true;
+    }
 
-    myShader.setUniform('ax1_4', [ax1[0], ax1[1], ax1[2], ax1[3]]);
-    myShader.setUniform('ax1_2', [ax1[4], ax1[5]]);
+    // rien n'a changé -> on ne redessine pas (le canvas garde la dernière image)
+    if (redraw) {
+        //pas de vec6 dans les shaders, on splitte en vec4 et vec2
+        myShader.setUniform('resolution', [width, height]);
+        myShader.setUniform('mouse', [centerX, centerY]);
+        myShader.setUniform('time', millis() / 1000.0);
+        myShader.setUniform('izoom', 1 / zoom);
+        myShader.setUniform('imaxIt', it);
 
-    myShader.setUniform('ax2_4', [ax2[0], ax2[1], ax2[2], ax2[3]]);
-    myShader.setUniform('ax2_2', [ax2[4], ax2[5]]);
+        myShader.setUniform('shift4', [shift[0], shift[1], shift[2], shift[3]]);
+        myShader.setUniform('shift2', [shift[4], shift[5]]);
 
-    shader(myShader);
-    rect(0, 0, width, height);
+        myShader.setUniform('ax1_4', [ax1[0], ax1[1], ax1[2], ax1[3]]);
+        myShader.setUniform('ax1_2', [ax1[4], ax1[5]]);
+
+        myShader.setUniform('ax2_4', [ax2[0], ax2[1], ax2[2], ax2[3]]);
+        myShader.setUniform('ax2_2', [ax2[4], ax2[5]]);
+
+        shader(myShader);
+        rect(0, 0, width, height);
+    }
 
 
     // === partie masque de divergence ===
-    if (frameCount % 1 == 0) { //toutes les 10 frames
+    if (changed) { // le masque ne dépend que de la scène : inutile de le relire si rien n'a bougé
 
         maskBuffer.shader(maskShader);
 

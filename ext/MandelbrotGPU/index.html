@@ -36,17 +36,21 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; 
             z-index: 1000;
             color: white;
             font-family: Arial, sans-serif;
             text-align: center;
+            overflow-y: auto;          
+            padding: 24px;
+            box-sizing: border-box;
         }
 
         #warning-text {
-            font-size: 2.5em;
+            margin-top: auto;
+            font-size: 2em;
             font-weight: bold;
-            margin-bottom: 40px;
+            margin-bottom: 28px;
             color: #2930ff;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             max-width: 80%;
@@ -54,6 +58,8 @@
         }
 
         #start-button {
+            margin-bottom: auto;
+            flex-shrink: 0;
             font-size: 1.5em;
             padding: 15px 40px;
             background: #2930ff;
@@ -77,6 +83,33 @@
             transform: translateY(0);
         }
 
+        #tips {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 36px;
+            font-size: 1.15em;
+            color: rgba(255, 255, 255, 0.88);
+            max-width: 90%;
+        }
+
+        #tips b {
+            color: #8f94ff;
+        }
+
+        #gpu-alert {
+            max-width: 600px;
+            margin-top: -14px;
+            margin-bottom: 36px;
+            padding: 12px 18px;
+            border: 1px solid rgba(255, 170, 60, 0.7);
+            border-radius: 14px;
+            background: rgba(255, 150, 30, 0.12);
+            color: #ffc27a;
+            font-size: 1.05em;
+            line-height: 1.4;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -86,10 +119,18 @@
 <body>
     <div id="warning-overlay">
         <div id="warning-text">
-            ⚠️ WARNING ⚠️<br>
+            WARNING<br>
             The following animation may contain<br>
             flashing or intense visuals
         </div>
+
+        <div id="tips">
+            <div>Sound on (or headphones) is recommended</div>
+            <div>Runs much smoother with <b>hardware acceleration</b> enabled in your browser</div>
+        </div>
+
+        <div id="gpu-alert" class="hidden"></div>
+
         <button id="start-button" onclick="startAnimation()">
             Enter Experience
         </button>
@@ -100,6 +141,35 @@
             document.getElementById('warning-overlay').classList.add('hidden');            
             NextPosition();
         }
+
+        function checkHardwareAcceleration() {
+            function tryContext(attrs) {
+                try {
+                    const c = document.createElement('canvas');
+                    const gl = c.getContext('webgl', attrs) || c.getContext('experimental-webgl', attrs);
+                    if (gl) {
+                        const lose = gl.getExtension('WEBGL_lose_context');
+                        if (lose) lose.loseContext();
+                    }
+                    return !!gl;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            let message = null;
+            if (!tryContext({ failIfMajorPerformanceCaveat: true })) {
+                message = tryContext({})
+                    ? 'Hardware acceleration seems to be turned off in your browser: the experience will be very slow. Please enable it in your browser settings, then reload the page.'
+                    : 'WebGL does not seem to be available in your browser. Please enable hardware acceleration in your browser settings, or try another browser.';
+            }
+            if (message) {
+                const alertBox = document.getElementById('gpu-alert');
+                alertBox.textContent = message;
+                alertBox.classList.remove('hidden');
+            }
+        }
+        checkHardwareAcceleration();
 
         // Permettre de démarrer avec la touche Entrée aussi
         document.addEventListener('keydown', function(event) {
