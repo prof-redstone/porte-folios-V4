@@ -15,7 +15,7 @@
 }
 
 .contact-sky {
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     background: linear-gradient(180deg, rgb(94, 144, 236) 24%, rgb(52, 144, 187) 86%);
 }
@@ -25,6 +25,7 @@
     justify-content: center;
     flex-direction: column;
     height: 100vh;
+    box-sizing: border-box;
 }
 
 .contact-links {
@@ -52,6 +53,8 @@
 
 .BGcontacts > img{
     width: 50px;
+    height: 50px;
+    object-fit: contain;
     margin: 20px;
 }
 

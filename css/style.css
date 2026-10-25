@@ -21,7 +21,7 @@
 }
 
 .color3-text{
-    color: rgb(0, 128, 255);
+    color: #0067c5;
 }
 
 body {
@@ -31,18 +31,21 @@ body {
     background-color: #1d1d1d;
     overflow-x: hidden;
     overflow-y: hidden;
+    -webkit-text-size-adjust: 100%;
 }
 
 #main {
     /*scroll-snap-type: y proximity;*/
     overflow-y: scroll;
     height: 100vh;
+    height: 100dvh;
     overflow-x: hidden;
+    max-width: 100%;
 }
 
 .sectionPage {
     position: relative;    
-    width: 100vw;
+    width: 100%;
     min-height: 100vh;
     height: auto;
     overflow: visible;
@@ -54,12 +57,21 @@ body {
     position: sticky;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     height: 0;
     z-index: -1;
     pointer-events: none;
     display: flex;
 
+}
+
+.background .relative,
+.background .absolute {
+    width: 100%;
+}
+
+.background .absolute > div {
+    width: 100%;
 }
 
 h1,
@@ -75,12 +87,18 @@ span {
     font-family: "Poppins";
 }
 
+h2,
 h3{
     height: 1.5em;
 }
 
 .grand-text {
     font-size: 4.5em;
+}
+
+.home-heading {
+    font-size: 2em;
+    font-weight: 700;
 }
 
 .underline-blue {
@@ -131,29 +149,34 @@ h3{
 
 .section-backdrop {
     height: 100vh;
-    width: 100vw;
+    width: 100%;
 }
 
 .home-section {
     height: 100vh;
+    height: 100svh;
+    min-height: 480px;
 }
 
 .home-overlay {
     position: absolute;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
+    height: 100svh;
     background-color: #0000004b;
 }
 
 .home-canvas {
-    width: 100vw;
+    width: 100%;
     height: 100vh;
+    height: 100svh;
 }
 
 .home-content {
     position: absolute;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
+    height: 100svh;
     display: flex;
     align-items: center;
 }
@@ -248,4 +271,61 @@ h3{
 .skills-content {
     width: 500px;
     padding: 50px;
+}
+
+section[id] {
+    scroll-margin-top: 70px;
+}
+
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.skip-link {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 2000;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background-color: #ebf0f5;
+    color: #06509b;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    transform: translateY(-150%);
+    transition: transform 0.2s ease;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+:focus-visible {
+    outline: 3px solid #0f96da;
+    outline-offset: 3px;
+}
+
+main:focus {
+    outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .button-card-run svg {
+        animation: none !important;
+    }
+
+    .media-card:hover,
+    .text-card:hover,
+    .img-carrousel:hover,
+    .skillsButon:hover {
+        transform: none;
+    }
 }

@@ -7,14 +7,18 @@ let autoTypewebDeveloper1
 let autoTypewebDeveloper2
 let intervalAnimLetter
 
+const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 //underscore animation blinking
 blinkState = 1;
-blinker = setInterval(() => {
-    blinkState = (blinkState == 1) ? 0 : 1
-    document.querySelectorAll(".cursorBlinker").forEach(el => {
-        el.style.opacity = blinkState
-    })
-}, 700)
+if (!prefersReducedMotion) {
+    blinker = setInterval(() => {
+        blinkState = (blinkState == 1) ? 0 : 1
+        document.querySelectorAll(".cursorBlinker").forEach(el => {
+            el.style.opacity = blinkState
+        })
+    }, 700)
+}
 
 //animation auto type
 helloText = document.getElementById("hello-text-WrittingText")
@@ -85,18 +89,20 @@ document.addEventListener("animationend", (event) => {
     }
 });
 //characters random qui toune tous les 4s
-intervalAnimLetter = setInterval(() => {
-    var el = document.getElementsByClassName('rotEvent');
-    var nb = nb_random(0, el.length - 1)
-    var classes = ["Yrotation", "Zrotation", "Xrotation"]
-    var nbClass = nb_random(0, classes.length - 1)
-    el[nb].classList.add(classes[nbClass])
-    setTimeout(function(el, classes) {
-        for (let u = 0; u < classes.length; u++) {
-            el.classList.remove(classes[u])
-        }
-    }, 2000, el[nb], classes)
-}, 4000)
+if (!prefersReducedMotion) {
+    intervalAnimLetter = setInterval(() => {
+        var el = document.getElementsByClassName('rotEvent');
+        var nb = nb_random(0, el.length - 1)
+        var classes = ["Yrotation", "Zrotation", "Xrotation"]
+        var nbClass = nb_random(0, classes.length - 1)
+        el[nb].classList.add(classes[nbClass])
+        setTimeout(function(el, classes) {
+            for (let u = 0; u < classes.length; u++) {
+                el.classList.remove(classes[u])
+            }
+        }, 2000, el[nb], classes)
+    }, 4000)
+}
 
 function StartSection1(){
     

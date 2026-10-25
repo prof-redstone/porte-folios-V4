@@ -78,7 +78,13 @@
     transform: none;
 }
 
-[id^="carrouselImages"]:hover .carrousel-track {
+@media (hover: hover) {
+    [id^="carrouselImages"]:hover .carrousel-track {
+        animation-play-state: paused;
+    }
+}
+
+[id^="carrouselImages"]:has(.carrousel-link:focus-visible) .carrousel-track {
     animation-play-state: paused;
 }
 

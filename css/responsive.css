@@ -1,0 +1,440 @@
+/* Responsive layout for tablet and mobile. Loaded after the section styles. */
+
+.navbar-toggle {
+    display: none;
+}
+
+@media (max-width: 1100px) {
+    #navbar,
+    #navbar *,
+    .card,
+    .card * {
+        box-sizing: border-box;
+    }
+
+    #navbar {
+        width: 100%;
+        height: 64px;
+        padding: 0 20px;
+    }
+
+    #navbar > div {
+        padding: 0;
+    }
+
+    #navbar > .navbar-brand {
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .navbar-brand p {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .navbar-logo {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        flex: none;
+    }
+
+    .navbar-toggle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 0;
+        border-radius: 10px;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+        flex: none;
+    }
+
+    .navbar-toggle-bar {
+        display: block;
+        width: 24px;
+        height: 2px;
+        margin: 3px 0;
+        border-radius: 2px;
+        background-color: currentColor;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .navbar-toggle[aria-expanded="true"] .navbar-toggle-bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .navbar-toggle[aria-expanded="true"] .navbar-toggle-bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    .navbar-toggle[aria-expanded="true"] .navbar-toggle-bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    #navbar > .navbar-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        max-height: calc(100dvh - 64px);
+        padding: 8px 20px 16px;
+        overflow-y: auto;
+        background-color: rgba(9, 17, 24, 0.97);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0.25s;
+    }
+
+    #navbar > .navbar-links.is-open {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        pointer-events: auto;
+        transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s;
+    }
+
+    #navbar > .navbar-links > a {
+        margin: 0;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgba(235, 240, 245, 0.14);
+    }
+
+    #navbar > .navbar-links > a:last-child {
+        border-bottom: 0;
+    }
+
+    #navbar > .navbar-links > a p {
+        font-size: 1.05rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .about-inner,
+    .about-inner *,
+    .skills-inner,
+    .skills-inner *,
+    .contact-inner,
+    .contact-inner * {
+        box-sizing: border-box;
+    }
+
+    .section-title {
+        height: auto;
+        min-height: 1.5em;
+        margin-bottom: 28px;
+        font-size: 2.6rem;
+        line-height: 1.15;
+    }
+
+    .section-title .rotHover {
+        display: inline;
+    }
+
+    .grand-text {
+        font-size: clamp(2.2rem, 7vw, 4.5em);
+        line-height: 1.15;
+    }
+
+    .grand-text .home-heading {
+        font-size: 1em;
+    }
+
+    #Home .home-title-block {
+        width: 100%;
+        padding: 0 24px;
+    }
+
+    .about-section,
+    .slides-section {
+        min-height: 0;
+    }
+
+    .about-inner {
+        width: 92%;
+        padding-top: 24px;
+    }
+
+    .about-layout {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 18px;
+        margin-top: 20px;
+    }
+
+    .about-text {
+        width: 100%;
+        font-size: 1.05rem;
+        line-height: 1.6;
+    }
+
+    .about-photo {
+        order: -1;
+        align-self: center;
+        width: 60%;
+        max-width: 240px;
+        height: auto;
+    }
+
+    .projects-content {
+        padding-top: 64px;
+    }
+
+    .project-cards {
+        margin-bottom: 48px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 760px;
+        flex-direction: column;
+        align-items: stretch;
+        margin: 40px auto 0;
+        padding: 0 16px;
+    }
+
+    .card > .project-media {
+        order: 1;
+        width: 100%;
+    }
+
+    .card > .text-card {
+        order: 2;
+        width: 100%;
+        max-width: 100%;
+        margin: 12px 0 0;
+        padding: 18px;
+    }
+
+    .media-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    img.media-card {
+        height: auto;
+        display: block;
+    }
+
+    .title-card {
+        height: auto;
+        font-size: 1.6em;
+        line-height: 1.25;
+    }
+
+    .description-card {
+        font-size: 0.95rem;
+        line-height: 1.55;
+    }
+
+    .langages-card {
+        flex-wrap: wrap;
+        gap: 4px 0;
+        font-size: 1rem;
+    }
+
+    .langages-card > p {
+        margin-right: 14px;
+    }
+
+    .date-card {
+        font-size: 1rem;
+    }
+
+    .slides-inner {
+        width: 100%;
+        padding: 24px 0 20px;
+    }
+
+    .carrousel-row {
+        width: 100%;
+        margin: 14px 0;
+    }
+
+    .carrousel-viewport {
+        width: 100%;
+    }
+
+    .cache_carrousel {
+        width: 60px;
+    }
+
+    .skills-inner {
+        width: 100%;
+        padding: 24px 16px 0;
+    }
+
+    .skills-panel {
+        width: 100%;
+        max-width: 720px;
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .skills-menu {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        width: 100%;
+        padding-bottom: 8px;
+        gap: 8px;
+    }
+
+    .skillsButon {
+        width: 100%;
+        min-width: 0;
+        height: auto;
+        min-height: 44px;
+        padding: 10px 8px;
+        border-radius: 10px;
+    }
+
+    .skillsButon span {
+        font-size: 0.85rem;
+        line-height: 1.2;
+        text-align: center;
+    }
+
+    .skillsButon:hover {
+        transform: none;
+    }
+
+    .skills-content {
+        width: 100%;
+        padding: 18px;
+    }
+
+    .skillsGrid {
+        position: static;
+        display: none;
+        width: 100%;
+        grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+        justify-content: stretch;
+        gap: 10px;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+    }
+
+    .skillsGridShow {
+        display: grid;
+    }
+
+    .imgSkill {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 8px;
+    }
+
+    .skillElement {
+        padding: 8px 4px;
+    }
+
+    .skillElement p {
+        font-size: 0.9rem;
+    }
+
+    .contact-section {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100svh;
+    }
+
+    .contact-inner {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100svh;
+        padding: 90px 16px 40px;
+    }
+
+    .contact-links {
+        flex-wrap: wrap;
+    }
+
+    .contact-sky {
+        height: 100vh;
+        height: 100svh;
+    }
+}
+
+@media (max-width: 600px) {
+    .section-title {
+        font-size: 2.1rem;
+    }
+
+    .grand-text {
+        font-size: clamp(2rem, 8.5vw, 2.75rem);
+    }
+
+    #Home .home-title-block {
+        padding: 0 16px;
+    }
+
+    .card {
+        padding: 0 12px;
+        margin-top: 32px;
+    }
+
+    .card > .text-card {
+        padding: 16px;
+    }
+
+    .title-card {
+        font-size: 1.5em;
+    }
+
+    .description-card {
+        font-size: 0.92rem;
+    }
+
+    .skills-menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #skillsBut7 {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: 50%;
+    }
+
+    .BGcontacts,
+    #BGmail,
+    #BGlinkedin,
+    #BGgit {
+        width: 80px;
+        height: 80px;
+        margin: 6px;
+    }
+
+    .BGcontacts > img {
+        width: 42px;
+        height: 42px;
+        margin: 19px;
+    }
+}
+
+@media (hover: none) {
+    .media-card:hover,
+    .img-carrousel:hover,
+    .skillsButon:hover {
+        transform: none;
+    }
+
+    .carrousel-name {
+        opacity: 1;
+        transform: none;
+    }
+}
