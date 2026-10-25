@@ -14,6 +14,13 @@ let dirSpeed = 0.02;
 
 let fractNum = 0;
 
+// --- optimisation du rendu (JS uniquement, le shader n'est pas modifié) ---
+const MOVE_DENSITY = 0.5;  // définition pendant les déplacements (1 = pleine, 0.5 = 4x moins de pixels)
+const IDLE_FRAMES = 8;     // frames sans changement avant de repasser en pleine définition
+let lastState = null;      // état de la dernière image dessinée
+let stillFrames = 0;
+let curDensity = 1;
+
 let norm = p5.Vector.normalize
 let sub = p5.Vector.sub
 let add = p5.Vector.add
@@ -43,10 +50,48 @@ function setup() {
     vue = createVector(0, 0, 0);
 }
 
+// tout ce qui influence l'image (hors résolution)
+function sceneState() {
+    return [pos.x, pos.y, pos.z, vue.x, vue.y, vue.z, zoom,
+        param.ang1, param.ang2, param.scale, param.it, param.gamma,
+        param.shift[0], param.shift[1], param.shift[2],
+        param.color[0], param.color[1], param.color[2],
+        width, height];
+}
+
+function sameState(a, b) {
+    if (!a || !b) return false;
+    for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    return true;
+}
+
 function draw() {
     move();
 
-    myShader.setUniform('resolution', [width, height]);
+    // 1) rien n'a changé -> on ne redessine pas (le canvas garde la dernière image)
+    const state = sceneState();
+    const changed = !sameState(state, lastState);
+    lastState = state;
+
+    let targetDensity = curDensity;
+    if (changed) {
+        stillFrames = 0;
+        targetDensity = MOVE_DENSITY;                         // en mouvement : petite image, étirée par le navigateur
+    } else {
+        stillFrames++;
+        if (stillFrames === IDLE_FRAMES) targetDensity = 1;   // à l'arrêt : pleine définition
+    }
+
+    let densityChanged = false;
+    if (targetDensity !== curDensity) {
+        curDensity = targetDensity;
+        pixelDensity(curDensity);
+        densityChanged = true;
+    }
+
+    if (!changed && !densityChanged) return;
+
+    myShader.setUniform('resolution', [width * curDensity, height * curDensity]); // pixels réellement rendus
     myShader.setUniform('mouse', [map(mouseX, 0, width, 0, 1), map(mouseY, 0, height, 0, 1)]);
     myShader.setUniform('time', millis() / 1000.0);
     myShader.setUniform('iposition', [pos.x, pos.y, pos.z]);
@@ -60,9 +105,13 @@ function draw() {
     myShader.setUniform('iShift', [param.shift[0], param.shift[1], param.shift[2]]);
     myShader.setUniform('iFracCol', [param.color[0], param.color[1], param.color[2]]);
 
-
     shader(myShader);
     rect(0, 0, width, height);
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    lastState = null; // force un redessin
 }
 
 function changeFract(){
