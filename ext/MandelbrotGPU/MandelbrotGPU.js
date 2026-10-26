@@ -6,8 +6,8 @@ let maskBuffer;
 let frameCount = 0;
 var percentageOfNonDivergence = 0;
 
-let appReady = false;      // vrai quand setup() est terminé
-let startPending = false;  // l'utilisateur a demandé à démarrer mais setup() n'était pas prêt
+let appReady = false; // vrai quand setup() est terminé
+let startPending = false; // l'utilisateur a demandé à démarrer mais setup() n'était pas prêt
 
 let zoom = 1;
 let centerX = 0.0;
@@ -44,6 +44,8 @@ let mainGain;
 let lowpass; // le filtre
 
 let bubble;
+let dialogueTimeoutId = null;
+let helpMenu;
 
 function preload() {
     myShader = loadShader('shader.vert', 'shader.frag');
@@ -76,14 +78,32 @@ function setup() {
 
     let bubbleSize = 800;
     bubble = new DialogueBubble()
-        .setPosition(width/2-bubbleSize/2, 50)
+        .setPosition(width / 2 - bubbleSize / 2, 50)
         .setSize(bubbleSize, 120)
         .setAnimationSpeed(3000, 2000, 60)
         .enableBlur(true);
 
-    //let firstPos = getPosition(0);
-    //moveRequest(firstPos.ax1, firstPos.ax2, firstPos.shift, 250, firstPos.zoom);
-
+    helpMenu = new HelpMenu();
+    helpMenu.onNextPosition          = () => NextPosition();
+    helpMenu.onPreviousPosition      = () => PreviousPosition();
+    helpMenu.getCurrentPositionIndex = () => positionIndex;
+    helpMenu.getPositionsCount       = () => posArray.length;
+    helpMenu.getCurrentAxes          = () => [ax1, ax2];
+    helpMenu.onUserInteract          = () => userTakeControl();
+    helpMenu.onGoToPlane = (nax1, nax2) => {
+        userTakeControl();
+        moveQueue = [];
+        transition.active = false;
+        moveRequest(nax1, nax2, [...shift], 150, zoom);  // 15 frames ≈ 250ms
+    }; 
+    
+    helpMenu.onResetPan = () => {
+        userTakeControl();
+        moveQueue = [];
+        transition.active = false;
+        // tout à zéro sauf a=2 → Mandelbrot à c=0
+        moveRequest(ax1, ax2, [0, 0, 0, 0, 2, 0], 150, zoom);
+    };
     //sounds
     setupSound();
 
@@ -102,7 +122,7 @@ function setupSound() {
     lowpass = new p5.LowPass();
 
     document.addEventListener('click', () => { //necessite un click pour démarrer le son
-        
+
 
         if (!audioStarted) {
             mainGain.disconnect();
@@ -195,7 +215,6 @@ function getPosition(index) {
 }
 
 function logPosition() {
-    //reafaire ça en 1 console.log
     console.log(",{ \"ax1\": [" + ax1.map(v => v.toFixed(6)).join(", ") + "],\n \"ax2\": [" +
         ax2.map(v => v.toFixed(6)).join(", ") + "],\n \"shift\": [" +
         shift.map(v => v.toFixed(6)).join(", ") + "],\n \"zoom\": " +
@@ -223,7 +242,6 @@ function mulVec(a, s) {
 }
 
 function planeAlignment(u1, u2, v1, v2) {
-    // Matrice des projections de la base du plan 1 sur la base du plan 2
     u1 = u1.map(x => x / normVec(u1));
     u2 = u2.map(x => x / normVec(u2));
     v1 = v1.map(x => x / normVec(v1));
@@ -233,115 +251,101 @@ function planeAlignment(u1, u2, v1, v2) {
     let proj_u1_v2 = dotVec(u1, v2);
     let proj_u2_v1 = dotVec(u2, v1);
     let proj_u2_v2 = dotVec(u2, v2);
-    
-    // Matrice de projection 2x2
-    let M = [[proj_u1_v1, proj_u1_v2],
-             [proj_u2_v1, proj_u2_v2]];
-    
-    // Mesure d'alignement : norme de Frobenius au carré
-    let alignment = proj_u1_v1*proj_u1_v1 + proj_u1_v2*proj_u1_v2 + 
-                   proj_u2_v1*proj_u2_v1 + proj_u2_v2*proj_u2_v2;
-    
-    return alignment; // Valeur entre 0 (orthogonaux) et 2 (identiques)
+
+    let alignment = proj_u1_v1 * proj_u1_v1 + proj_u1_v2 * proj_u1_v2 +
+        proj_u2_v1 * proj_u2_v1 + proj_u2_v2 * proj_u2_v2;
+
+    return alignment;
 }
 
-function projOnPlane(x, u1, u2){
-  let U = [u1,u2];
-  let proj = [0,0,0,0,0,0];
-  for(let u of U){
-    let coeff = dotVec(x,u)/dotVec(u,u);
-    proj = proj.map((pi,i)=>pi+coeff*u[i]);
-  }
-  return proj;
+function projOnPlane(x, u1, u2) {
+    let U = [u1, u2];
+    let proj = [0, 0, 0, 0, 0, 0];
+    for (let u of U) {
+        let coeff = dotVec(x, u) / dotVec(u, u);
+        proj = proj.map((pi, i) => pi + coeff * u[i]);
+    }
+    return proj;
 }
 
 function planeShift(p1, u1, u2, p2, v1, v2) {
-    // Distance de p1 au plan défini par (p2, v1, v2)
     let p1_to_p2 = subVec(p1, p2);
     let proj_p1_on_plane2 = projOnPlane(p1_to_p2, v1, v2);
     let dist1 = normVec(subVec(p1_to_p2, proj_p1_on_plane2));
-    
-    // Distance de p2 au plan défini par (p1, u1, u2)  
+
     let p2_to_p1 = subVec(p2, p1);
     let proj_p2_on_plane1 = projOnPlane(p2_to_p1, u1, u2);
     let dist2 = normVec(subVec(p2_to_p1, proj_p2_on_plane1));
-    
-    // Pour des plans parallèles, dist1 ≈ dist2
-    // Pour des plans non-parallèles, on prend la moyenne
+
     return (dist1 + dist2) / 2;
 }
 
 function distanceAlignement(u1, u2, v1, v2) {
     let align = planeAlignment(u1, u2, v1, v2);
-    return 2 - align; // entre 0 et 2
+    return 2 - align;
 }
 
 function distanceShift(p1, u1, u2, p2, v1, v2) {
-    let shift = planeShift(p1, u1, u2, p2, v1, v2);
-    return shift;
+    return planeShift(p1, u1, u2, p2, v1, v2);
 }
 
 function distanceToPlane(p1, u1, u2, p2, v1, v2) {
-    let alignDist = distanceAlignement(u1, u2, v1, v2); // entre 0 et 2
-    let shiftDist = distanceShift(p1, u1, u2, p2, v1, v2); // entre 0 et +infini
-    return shiftDist + alignDist; // entre 0 et +infini
+    let alignDist = distanceAlignement(u1, u2, v1, v2);
+    let shiftDist = distanceShift(p1, u1, u2, p2, v1, v2);
+    return shiftDist + alignDist;
 }
 
 function keyboardInput() {
-
     let speed = -0.005 / zoom;
+    let userMoved = false;
 
-    if (keyIsDown(LEFT_ARROW)) {
-        shift = addVec(shift, mulVec(e1, -speed));
-    }
-    if (keyIsDown(RIGHT_ARROW)) {
-        shift = addVec(shift, mulVec(e1, speed));
-    }
-    if (keyIsDown(UP_ARROW)) {
-        shift = addVec(shift, mulVec(e2, speed));
-    }
-    if (keyIsDown(DOWN_ARROW)) {
-        shift = addVec(shift, mulVec(e2, -speed));
-    }
+    if (keyIsDown(LEFT_ARROW))  { shift = addVec(shift, mulVec(e1, -speed)); userMoved = true; }
+    if (keyIsDown(RIGHT_ARROW)) { shift = addVec(shift, mulVec(e1,  speed)); userMoved = true; }
+    if (keyIsDown(UP_ARROW))    { shift = addVec(shift, mulVec(e2,  speed)); userMoved = true; }
+    if (keyIsDown(DOWN_ARROW))  { shift = addVec(shift, mulVec(e2, -speed)); userMoved = true; }
+    if (keyIsDown(81))          { shift = addVec(shift, mulVec(e3, -speed)); userMoved = true; } // Q
+    if (keyIsDown(68))          { shift = addVec(shift, mulVec(e3,  speed)); userMoved = true; } // D
+    if (keyIsDown(90))          { shift = addVec(shift, mulVec(e4,  speed)); userMoved = true; } // Z
+    if (keyIsDown(83))          { shift = addVec(shift, mulVec(e4, -speed)); userMoved = true; } // S
 
-    if (keyIsDown(81)) { // Q
-        shift = addVec(shift, mulVec(e3, -speed));
-    }
-    if (keyIsDown(68)) { // D
-        shift = addVec(shift, mulVec(e3, speed));
-    }
-    if (keyIsDown(90)) { // Z
-        shift = addVec(shift, mulVec(e4, speed));
-    }
-    if (keyIsDown(83)) { // S
-        shift = addVec(shift, mulVec(e4, -speed));
-    }
+    // ★ Nouveaux axes : e5 = a.real, e6 = a.imag
+    if (keyIsDown(65))          { shift = addVec(shift, mulVec(e5, -speed)); userMoved = true; } // A
+    if (keyIsDown(69))          { shift = addVec(shift, mulVec(e5,  speed)); userMoved = true; } // E
+    if (keyIsDown(82))          { shift = addVec(shift, mulVec(e6,  speed)); userMoved = true; } // R
+    if (keyIsDown(70))          { shift = addVec(shift, mulVec(e6, -speed)); userMoved = true; } // F
 
-    //space to increase postion index, positions.lenght n'existe pas ou ne fonctionne pas
-    if (keyIsDown(32) && this.spacePressed != true) { // SPACE
+    if (userMoved) userTakeControl();
+
+    if (keyIsDown(32) && this.spacePressed != true) {
         this.spacePressed = true;
-            actionSound.rate(0.5);
-            actionSound.setVolume(0.2)
-            //actionSound.play();
+        actionSound.rate(0.5);
+        actionSound.setVolume(0.2);
         NextPosition();
     } else if (!keyIsDown(32)) {
         this.spacePressed = false;
     }
 }
 
+function eventIsOnCanvas(e) {
+    if (e && e.target) return e.target.tagName === 'CANVAS';
+    const el = document.elementFromPoint(mouseX, mouseY);
+    return el && el.tagName === 'CANVAS';
+}
 
-function mousePressed() {
-    if (mouseButton === LEFT) { //centrer sur la souris
+function mousePressed(event) {
+    if (!eventIsOnCanvas(event)) return;
+    userTakeControl();
+
+    if (mouseButton === LEFT) {
         updateMousePosition();
-
         moveQueue = [];
         transition.active = false;
         moveRequest(ax1, ax2, [...mousePos6D], 50, zoom);
     }
-    if (mouseButton === RIGHT) { //rotation de l'espace sur la souris
-        if(audioStarted){
+    if (mouseButton === RIGHT) {
+        if (audioStarted) {
             actionSound.rate(0.5);
-            actionSound.setVolume(0.2)
+            actionSound.setVolume(0.2);
             actionSound.play();
         }
         updateMousePosition();
@@ -352,96 +356,100 @@ function mousePressed() {
 }
 
 function mouseWheel(event) {
-    if (event.delta > 0) {
-        zoom *= 0.8;
-    } else if (event.delta < 0) {
-        zoom *= 1.25;
-    }
+    if (!eventIsOnCanvas(event)) return;
+    userTakeControl();
+    if (event.delta > 0)      zoom *= 0.8;
+    else if (event.delta < 0) zoom *= 1.25;
     return false;
 }
 
-function NextPosition() {
-    if (!appReady) {
-        startPending = true;
-        return;
+function NextPosition()     { goToPosition(positionIndex + 1); }
+function PreviousPosition() { goToPosition(positionIndex - 1); }
+
+function stopDialogue() {
+    if (dialogueTimeoutId !== null) {
+        clearTimeout(dialogueTimeoutId);
+        dialogueTimeoutId = null;
     }
+    if (bubble) bubble.stopAutoMode();
+}
 
+function userTakeControl() {
+    if (!bubble || !bubble.isVisible) return;
+    stopDialogue();
+    bubble.hide();
+}
 
-    positionIndex = (positionIndex + 1) % posArray.length;
+function scheduleDialogue(pos) {
+    if (dialogueTimeoutId !== null) {
+        clearTimeout(dialogueTimeoutId);
+        dialogueTimeoutId = null;
+    }
+    const delayMs = pos.dialDelay != undefined ? pos.dialDelay * 1000 : 0;
+    if (delayMs > 0) {
+        dialogueTimeoutId = setTimeout((bubble, dialogue) => {
+            dialogueTimeoutId = null;
+            bubble.addTexts(dialogue);
+            bubble.startAutoMode();
+        }, delayMs, bubble, pos.dialogue);
+    } else {
+        bubble.addTexts(pos.dialogue);
+        bubble.startAutoMode();
+    }
+}
 
+function goToPosition(targetIndex) {
+    if (!appReady) { startPending = true; return; }
+
+    positionIndex = ((targetIndex % posArray.length) + posArray.length) % posArray.length;
     moveQueue = [];
     transition.active = false;
 
     let pos = getPosition(positionIndex);
-    if (pos) {
-        console.log("Transition vers la position", positionIndex);
-        let baseDuration = 20; // durée minimale en ms
-        let scaleFactor = 40; // facteur d'échelle
-        if (zoom > 2.0) {
-            // juste dézoomer
-            let logDistance = Math.abs(Math.log2(1.0 / zoom));
-            let zoomDuration = baseDuration + (logDistance * scaleFactor);
-            moveRequest(ax1, ax2, shift, zoomDuration, 1.0);
-        }
-        if(pos.zoom < 1.0){
-            moveRequest(pos.ax1, pos.ax2, pos.shift, 250, pos.zoom);
-        }else{
-            moveRequest(pos.ax1, pos.ax2, pos.shift, 250, 1.0);
-        }
+    if (!pos) return;
 
-        let logDistance = Math.abs(Math.log2(1.0 / pos.zoom));
-        let zoomDuration = baseDuration + (logDistance * scaleFactor);
-        moveRequest(pos.ax1, pos.ax2, pos.shift, zoomDuration, pos.zoom);
+    stopDialogue();
 
-
-        if (pos.note == "Rotate Space") { //go at location then turn into Julia
-            console.log("Rotation de l'espace demandé par la position");
-            rotateSpace(pos.shift, 1);
-        }
-
-        if(pos.dialogue != undefined){
-            if(pos.dialDelay != undefined){
-                setTimeout((bubble)=>{
-                    console.log("oui")
-                    bubble.addTexts(pos.dialogue)
-                    bubble.startAutoMode()
-                }, pos.dialDelay*1000, bubble)
-            }else{
-                console.log("non")
-                bubble.addTexts(pos.dialogue)
-                bubble.startAutoMode()
-            }
-        }
+    console.log("Transition vers la position", positionIndex);
+    let baseDuration = 20, scaleFactor = 40;
+    if (zoom > 2.0) {
+        let logDistance = Math.abs(Math.log2(1.0 / zoom));
+        moveRequest(ax1, ax2, shift, baseDuration + logDistance * scaleFactor, 1.0);
     }
+    if (pos.zoom < 1.0) {
+        moveRequest(pos.ax1, pos.ax2, pos.shift, 250, pos.zoom);
+    } else {
+        moveRequest(pos.ax1, pos.ax2, pos.shift, 250, 1.0);
+    }
+    let logDistance  = Math.abs(Math.log2(1.0 / pos.zoom));
+    moveRequest(pos.ax1, pos.ax2, pos.shift, baseDuration + logDistance * scaleFactor, pos.zoom);
+
+    if (pos.note == "Rotate Space") rotateSpace(pos.shift, 1);
+
+    if (pos.dialogue != undefined) scheduleDialogue(pos);
 }
 
-//rotation au tour de la sourie par défaut, ou autour d'un point donné, calcule automatique du plan de destination, précisiser 0 ou 1 pour forcer mandelbrot ou julia
 function rotateSpace(newShiftP = [...mousePos6D], destination = null) {
-    //inverser les dimension 1 et 2 avec 3 et 4  
     let newAx1 = [ax1[2], ax1[3], ax1[0], ax1[1], ax1[4], ax1[5]];
     let newAx2 = [ax2[2], ax2[3], ax2[0], ax2[1], ax2[4], ax2[5]];
     let newShift = [newShiftP[0], newShiftP[1], newShiftP[2], newShiftP[3], newShiftP[4], newShiftP[5]];
 
-    //faire une condition avec la somme en val absolue des ax1[2] ax1[3] ax2[2] ax2[3], et comparer avec ax1[0] ax1[1] ax2[0] ax2[1]
-    //si la somme des 3 et 4 est plus grande, on remet les ax1 et ax2 a leur position initiale
     let sum34 = Math.abs(ax1[2]) + Math.abs(ax1[3]) + Math.abs(ax2[2]) + Math.abs(ax2[3]);
     let sum12 = Math.abs(ax1[0]) + Math.abs(ax1[1]) + Math.abs(ax2[0]) + Math.abs(ax2[1]);
 
-    if ((sum34 > sum12 && destination == null) || destination == 1) { //on est plus dans le plan de Mandelbrot que de Julia
+    if ((sum34 > sum12 && destination == null) || destination == 1) {
         console.log("vers Julia")
         newAx1 = [1.0, 0.0, 0.0, 0.0, ax1[4], ax1[5]];
         newAx2 = [0.0, 1.0, 0.0, 0.0, ax2[4], ax2[5]];
         moveRequest(newAx1, newAx2, newShift, 250, 10.0);
         moveRequest(newAx1, newAx2, newShift, 100, 1.0);
-
-    } else { //Julia vers Mandelbrot
+    } else {
         newAx1 = [0.0, 0.0, 1.0, 0.0, ax1[4], ax1[5]];
         newAx2 = [0.0, 0.0, 0.0, 1.0, ax2[4], ax2[5]];
 
-        newShift = [0, 0, mousePos6D[2], mousePos6D[3], mousePos6D[4], mousePos6D[5]]; //mandelbrot bien que centré.
+        newShift = [0, 0, mousePos6D[2], mousePos6D[3], mousePos6D[4], mousePos6D[5]];
         console.log("vers Mandelbrot")
         if (zoom > 2.0) {
-            //juste dézoomer
             let logDistance = Math.abs(Math.log2(1.0 / zoom));
             let baseDuration = 20;
             let scaleFactor = 20;
@@ -450,7 +458,6 @@ function rotateSpace(newShiftP = [...mousePos6D], destination = null) {
         }
         moveRequest(newAx1, newAx2, newShift, 250, 4.0);
     }
-
 }
 
 function updateMousePosition() {
@@ -462,7 +469,6 @@ function updateMousePosition() {
 
     uv_x *= (width / height);
 
-    // Mettre à jour les variables globales
     centerX = uv_x;
     centerY = uv_y;
     let P4_x = shift[0] + ax1[0] * centerX + ax2[0] * centerY;
@@ -475,27 +481,23 @@ function updateMousePosition() {
     mousePos6D = [P4_x, P4_y, P4_z, P4_w, P2_x, P2_y];
 }
 
-
 // --- BEGIN ADAPTIVE ---------------------------------------------------------
-// Résolution adaptative : on mesure le framerate pendant les mouvements et on ajuste
-// pixelDensity pour rester au dessus de FPS_MIN. Quand l'image ne bouge plus, on repasse
-// en pleine définition ; quand ça rebouge, on repart de la dernière densité qui marchait.
-const FPS_MIN = 24;          // en dessous : on baisse la définition
-const FPS_TARGET = 30;       // fps visé quand on baisse
-const FPS_COMFORT = 40;      // au dessus : on a de la marge, on peut remonter
-const DENSITY_MIN = 0.25;    // jamais plus flou que ça
-const DENSITY_STEP = 0.05;   // la densité est arrondie à ce pas (évite les micro-redimensionnements)
-const IDLE_DENSITY = 1;      // définition quand l'image est immobile
-const IDLE_FRAMES = 6;       // frames sans changement avant de passer en IDLE_DENSITY
-const ADAPT_FRAMES = 8;      // nb de frames en mouvement mesurées avant chaque décision
-const SKIP_AFTER_RESIZE = 2; // frames ignorées après un changement de densité (réallocation = frame lente)
-const CEIL_MS = 4000;        // après une remontée ratée, durée pendant laquelle on ne retente pas (double à chaque échec)
+const FPS_MIN = 24;
+const FPS_TARGET = 30;
+const FPS_COMFORT = 40;
+const DENSITY_MIN = 0.25;
+const DENSITY_STEP = 0.05;
+const IDLE_DENSITY = 1;
+const IDLE_FRAMES = 6;
+const ADAPT_FRAMES = 8;
+const SKIP_AFTER_RESIZE = 2;
+const CEIL_MS = 4000;
 const CEIL_MAX_MS = 32000;
-const PERF_DEBUG = false;    // true : affiche les changements de densité dans la console
+const PERF_DEBUG = false;
 
-let curDensity = 1;          // densité appliquée au canvas
-let motionDensity = 1;       // dernière densité choisie pendant un mouvement
-let lastState = null;        // état de la dernière image dessinée
+let curDensity = 1;
+let motionDensity = 1;
+let lastState = null;
 let stillFrames = 0;
 let perfN = 0, perfT = 0, perfSkip = 0;
 let lastAdaptWasUp = false, densityBeforeUp = 1, densityCeil = 1, ceilUntil = 0, ceilMs = CEIL_MS;
@@ -506,7 +508,6 @@ function quantDensity(d) {
     return Math.round(d * 1000) / 1000;
 }
 
-// applique une densité (arrondie) ; renvoie true si elle a changé
 function applyDensity(d) {
     d = quantDensity(d);
     if (Math.abs(d - curDensity) < 1e-6) return false;
@@ -517,10 +518,9 @@ function applyDensity(d) {
     return true;
 }
 
-// appelée à chaque frame où l'image a changé : mesure le fps et ajuste la densité
 function adaptDensity() {
     if (perfSkip > 0) { perfSkip--; return; }
-    if (deltaTime > 500) return;                 // onglet en arrière-plan, gros hoquet... mesure non fiable
+    if (deltaTime > 500) return;
     perfN++; perfT += deltaTime;
     if (perfN < ADAPT_FRAMES) return;
 
@@ -528,35 +528,30 @@ function adaptDensity() {
     perfN = 0; perfT = 0;
     const now = millis();
 
-    // 1) trop lent : on baisse
     if (fps < FPS_MIN) {
         if (curDensity <= DENSITY_MIN) { lastAdaptWasUp = false; return; }
         let target;
         if (lastAdaptWasUp) {
-            // on venait de remonter et ça ne tient pas : retour direct, et on attend de plus en plus longtemps avant de réessayer
             target = densityBeforeUp;
             densityCeil = densityBeforeUp;
             ceilUntil = now + ceilMs;
             ceilMs = Math.min(ceilMs * 2, CEIL_MAX_MS);
         } else {
-            // le coût est ~ proportionnel au nombre de pixels (densité²)
             target = curDensity * Math.sqrt(fps / FPS_TARGET);
-            if (quantDensity(target) >= curDensity) target = curDensity - DENSITY_STEP; // au moins un cran
+            if (quantDensity(target) >= curDensity) target = curDensity - DENSITY_STEP;
         }
         lastAdaptWasUp = false;
         if (applyDensity(target)) motionDensity = curDensity;
         return;
     }
 
-    // 2) assez rapide : la remontée précédente (si elle existe) a tenu
     if (lastAdaptWasUp) { lastAdaptWasUp = false; ceilMs = CEIL_MS; }
 
-    // 3) peut-on remonter ?
     const ceil = now < ceilUntil ? densityCeil : 1;
     if (curDensity >= ceil) return;
-    if (fps <= FPS_COMFORT) return;                                       // zone confortable (FPS_MIN..FPS_COMFORT) : on ne touche à rien
+    if (fps <= FPS_COMFORT) return;
 
-    let target = curDensity * Math.min(1.15, Math.sqrt(fps / FPS_TARGET)); // marge : on remonte doucement
+    let target = curDensity * Math.min(1.15, Math.sqrt(fps / FPS_TARGET));
     if (quantDensity(target) <= curDensity) target = curDensity + DENSITY_STEP;
     target = Math.min(target, ceil);
     const before = curDensity;
@@ -567,45 +562,38 @@ function adaptDensity() {
     }
 }
 
-// tout ce qui influence l'image (le shader n'utilise ni time ni mouse)
 function sceneState() {
     return [...shift, ...ax1, ...ax2, zoom, it, width, height];
 }
 
 function sameState(a, b) {
     if (!a || !b) return false;
-    for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    for (let i = 0; i < a.length; i++)
+        if (a[i] !== b[i]) return false;
     return true;
 }
 // --- END ADAPTIVE -----------------------------------------------------------
 
-function draw() {    
-
+function draw() {
     moveManager();
     keyboardInput();
     updateMousePosition();
 
-
-    // --- résolution adaptative ---
     const state = sceneState();
     const changed = !sameState(state, lastState);
     lastState = state;
     let redraw = changed;
 
     if (changed) {
-        // l'image bouge : si on était en pleine définition à l'arrêt, on repart de la dernière densité de mouvement
         if (stillFrames > 0) applyDensity(motionDensity);
         stillFrames = 0;
         adaptDensity();
     } else {
         stillFrames++;
-        // image immobile : on repasse en pleine définition (une seule fois)
         if (stillFrames === IDLE_FRAMES && applyDensity(IDLE_DENSITY)) redraw = true;
     }
 
-    // rien n'a changé -> on ne redessine pas (le canvas garde la dernière image)
     if (redraw) {
-        //pas de vec6 dans les shaders, on splitte en vec4 et vec2
         myShader.setUniform('resolution', [width, height]);
         myShader.setUniform('mouse', [centerX, centerY]);
         myShader.setUniform('time', millis() / 1000.0);
@@ -625,10 +613,7 @@ function draw() {
         rect(0, 0, width, height);
     }
 
-
-    // === partie masque de divergence ===
-    if (changed) { // le masque ne dépend que de la scène : inutile de le relire si rien n'a bougé
-
+    if (changed) {
         maskBuffer.shader(maskShader);
 
         maskShader.setUniform('resolution', [maskBuffer.width, maskBuffer.height]);
@@ -646,18 +631,13 @@ function draw() {
 
         maskBuffer.rect(0, 0, maskBuffer.width, maskBuffer.height);
 
-        // récupérer pixels
         maskBuffer.loadPixels();
 
         let BlackCount = 0;
         let GreyCount = 0;
         for (let i = 0; i < maskBuffer.pixels.length; i += 4) {
-            if (maskBuffer.pixels[i + 3] > 250) { // alpha > 0.5
-                BlackCount++;
-            }
-            if (maskBuffer.pixels[i + 3] > 10) { // alpha > 0.5
-                GreyCount++;
-            }
+            if (maskBuffer.pixels[i + 3] > 250) BlackCount++;
+            if (maskBuffer.pixels[i + 3] > 10)  GreyCount++;
         }
         percentageOfNonDivergence = BlackCount / (maskBuffer.width * maskBuffer.height);
         percentageOfHighDivergence = GreyCount / (maskBuffer.width * maskBuffer.height);
@@ -667,90 +647,75 @@ function draw() {
         updateSound(1 - percentageOfNonDivergence);
     }
 
-
     frameCount++;
 }
-
 
 let previousVolumes = new Array(nbTracks).fill(0);
 const smoothingFactor = 0.05;
 
-
 function updateSound(caveness) {
     caveness = constrain(caveness, 0, 1);
-
-    // exponentiel pour mieux répartir
     let shaped = pow(caveness, 3);
-
-    let freq = map(shaped, 0, 1, 130, 8000);//frequence du cutoff
+    let freq = map(shaped, 0, 1, 130, 8000);
     lowpass.freq(freq);
 
-
-    
-    //mandel avec exposant 2 (plan principal)
-    let dist=1;
-    let distminforall=1;
+    let dist = 1;
+    let distminforall = 1;
     let distFactor = 0.1;
     let targetVolumes = new Array(nbTracks).fill(0);
-    
-    
+
     dist = distanceToPlane(shift, ax1, ax2, [0, 0, 0, 0, 2, 0], e3, e4);
     distminforall = min(dist, distminforall);
     if (dist < distFactor) {
-        targetVolumes[0] = (tracksNormaliseVolume[0] * (1.0- (1/distFactor)*dist));
-
-    }else{
-        //mandel avec exposant reel
-        dist = distanceAlignement(ax1, ax2, e3, e4)*2 + abs(shift[5]);
+        targetVolumes[0] = (tracksNormaliseVolume[0] * (1.0 - (1 / distFactor) * dist));
+    } else {
+        dist = distanceAlignement(ax1, ax2, e3, e4) * 2 + abs(shift[5]);
         distminforall = min(dist, distminforall);
         if (dist < distFactor) {
-            targetVolumes[2] = (tracksNormaliseVolume[2] * (1.0- (1/distFactor)*dist));
-        }else{
-            dist = distanceAlignement(ax1, ax2, e3, e4)*2
+            targetVolumes[2] = (tracksNormaliseVolume[2] * (1.0 - (1 / distFactor) * dist));
+        } else {
+            dist = distanceAlignement(ax1, ax2, e3, e4) * 2;
             distminforall = min(dist, distminforall);
-            if(dist < distFactor){
-                targetVolumes[3] = (tracksNormaliseVolume[3] * (1.0- (1/distFactor)*dist));
+            if (dist < distFactor) {
+                targetVolumes[3] = (tracksNormaliseVolume[3] * (1.0 - (1 / distFactor) * dist));
             }
         }
-    }    
+    }
 
-    //plan Julia
     dist = distanceAlignement(ax1, ax2, e1, e2);
     distminforall = min(dist, distminforall);
-    if(dist < distFactor){
-        targetVolumes[1] = (tracksNormaliseVolume[1] * (1.0- (1/distFactor)*dist));
+    if (dist < distFactor) {
+        targetVolumes[1] = (tracksNormaliseVolume[1] * (1.0 - (1 / distFactor) * dist));
     }
 
-    dist = min(distanceAlignement(ax1, ax2, e5, e6), distanceAlignement(ax1, ax2, e1, e6))
+    dist = min(distanceAlignement(ax1, ax2, e5, e6), distanceAlignement(ax1, ax2, e1, e6));
     distminforall = min(dist, distminforall);
-    if(dist < distFactor){
-        targetVolumes[4] = (tracksNormaliseVolume[4] * (1.0- (1/distFactor)*dist));
+    if (dist < distFactor) {
+        targetVolumes[4] = (tracksNormaliseVolume[4] * (1.0 - (1 / distFactor) * dist));
     }
 
-    dist = min(distanceAlignement(ax1, ax2, addVec(e3, e5), addVec(e4, e6)), distanceAlignement(ax1, ax2,addVec(e5, e1),addVec(e2, e6)))
+    dist = min(distanceAlignement(ax1, ax2, addVec(e3, e5), addVec(e4, e6)),
+               distanceAlignement(ax1, ax2, addVec(e5, e1), addVec(e2, e6)));
     distminforall = min(dist, distminforall);
-    if(dist < distFactor){
-        targetVolumes[5] = (tracksNormaliseVolume[5] * (1.0- (1/distFactor)*dist));
+    if (dist < distFactor) {
+        targetVolumes[5] = (tracksNormaliseVolume[5] * (1.0 - (1 / distFactor) * dist));
     }
 
-    if(distminforall > 0.4){
-        targetVolumes[6] = (tracksNormaliseVolume[6] * min(distminforall-0.4, 0.1)*10);
+    if (distminforall > 0.4) {
+        targetVolumes[6] = (tracksNormaliseVolume[6] * min(distminforall - 0.4, 0.1) * 10);
     }
 
     for (let i = 0; i < tracks.length; i++) {
-        // Interpolation linéaire vers le volume cible
         previousVolumes[i] = previousVolumes[i] + (targetVolumes[i] - previousVolumes[i]) * smoothingFactor;
-        
-        // Application seulement si le changement est significatif
         if (abs(tracks[i].getVolume() - previousVolumes[i]) > 0.0) {
             tracks[i].setVolume(previousVolumes[i]);
         }
     }
 }
 
-function getVolumeOfAllTracks(){
+function getVolumeOfAllTracks() {
     for (let i = 0; i < tracks.length; i++) {
-        console.log("track i = ", i, ", v = ", tracks[i].getVolume())
+        console.log("track i = ", i, ", v = ", tracks[i].getVolume());
     }
 }
 
@@ -758,5 +723,4 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 
-document.addEventListener('contextmenu', e => e.preventDefault()); //desactive le menu contextuel au clic droit
-
+document.addEventListener('contextmenu', e => e.preventDefault());
